@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 // Hook up the DbContext
 builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
-    dbContextOptions.UseSqlite("Data Source=propeller.db"));
+    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings.CustomersSQLiteConnString"]));
 
 var app = builder.Build();
 

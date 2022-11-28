@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Propeller.Entities;
+using Propeller.Entities.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Propeller.DALC.Sqlite
 {
-    public class CustomerDbContext : DbContext
+    public class CustomerDbContext : DbContext, ICustomerDbContext
     {
         public CustomerDbContext(DbContextOptions<CustomerDbContext> options)
           : base(options) { }
