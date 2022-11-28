@@ -10,8 +10,14 @@ namespace Propeller.Mappers
         public CustomerProfile()
         {
             CreateMap<Customer, CustomerDto>();
+            
             CreateMap<CreateCustomerRequest, Customer>()
                 .ForMember(d => d.CustomerStatusID, o => o.MapFrom(s => s.Status));
+            
+            //CreateMap<UpdateCustomerRequest, Customer>()
+            //    .ForMember(d => d.CustomerStatusID, o => o.MapFrom(s => s.Status));
+            
+            // CreateMap<Customer, CustomerDto>();
 
         }
     }

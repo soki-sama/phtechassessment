@@ -18,7 +18,9 @@ namespace Propeller.DALC.Interfaces
         // addding complexity and diminishing maintainability
         Task<Customer?> RetrieveCustomerAsync(int customerId);
 
-        Task<bool> InsertCustomer(Customer newCustomer);
+        Task<bool> InsertCustomerAsync(Customer newCustomer);
+
+        Task<bool> SaveChangesAsync();
 
     }
 }
