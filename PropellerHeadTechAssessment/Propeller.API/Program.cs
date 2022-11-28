@@ -25,6 +25,9 @@ builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 // Inject Repos
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
+// Inject Automapper
+builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

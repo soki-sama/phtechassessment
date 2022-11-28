@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Propeller.DALC.Sqlite", "Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Propeller.Models", "Propeller.Models\Propeller.Models.csproj", "{E2B70B53-73DD-4FAA-B8DF-5843E4EC7BE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Propeller.Mappers", "Propeller.Mappers\Propeller.Mappers.csproj", "{E63C3A38-5486-403E-B181-44E1934B99F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{E2B70B53-73DD-4FAA-B8DF-5843E4EC7BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2B70B53-73DD-4FAA-B8DF-5843E4EC7BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2B70B53-73DD-4FAA-B8DF-5843E4EC7BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E63C3A38-5486-403E-B181-44E1934B99F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E63C3A38-5486-403E-B181-44E1934B99F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E63C3A38-5486-403E-B181-44E1934B99F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E63C3A38-5486-403E-B181-44E1934B99F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
