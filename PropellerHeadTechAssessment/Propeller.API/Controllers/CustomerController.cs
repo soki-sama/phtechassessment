@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
 using Propeller.Entities;
@@ -7,6 +8,10 @@ using Propeller.Models.Requests;
 
 namespace Propeller.API.Controllers
 {
+    // TODO: Add model validation
+    // TODO: Add proper return type for requests
+    // TODO: Cleanup
+
     [ApiController]
     [Route("api/customers")]
     public class CustomerController : ControllerBase
@@ -84,6 +89,30 @@ namespace Propeller.API.Controllers
             var result = await _customerRepo.InsertCustomerAsync(newCustomer);
             return new OkResult();
         }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PartialUpdateCustomer(int id, 
+            JsonPatchDocument<UpdateCustomerRequest> requestPatch)
+        {
+
+            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
+
+            if (existingCustomer == null)
+            {
+                return NotFound();
+            }
+
+            UpdateCustomerRequest customerPatch = _mapper.Map<UpdateCustomerRequest>(existingCustomer);
+
+            requestPatch.ApplyTo(customerPatch, ModelState);
+
+            _mapper.Map(customerPatch, existingCustomer);
+
+            var result = await _customerRepo.SaveChangesAsync();
+            return Ok();
+
+        }
+
 
     }
 }
