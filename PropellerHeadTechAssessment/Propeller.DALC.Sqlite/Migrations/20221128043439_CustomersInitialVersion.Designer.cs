@@ -11,7 +11,7 @@ using Propeller.DALC.Sqlite;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    [Migration("20221128035404_CustomersInitialVersion")]
+    [Migration("20221128043439_CustomersInitialVersion")]
     partial class CustomersInitialVersion
     {
         /// <inheritdoc />

@@ -13,7 +13,7 @@ namespace Propeller.Models.Requests
         public string Name { get; set; }
 
         [Required]
-        public int InitialStatus { get; set; }
+        public int Status { get; set; }
 
     }
 }

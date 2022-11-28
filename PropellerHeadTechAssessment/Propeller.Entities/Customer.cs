@@ -17,6 +17,7 @@ namespace Propeller.Entities
 
         [ForeignKey("CustomerStatusID")]
         public CustomerStatus Status { get; set; }
+        public int CustomerStatusID { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

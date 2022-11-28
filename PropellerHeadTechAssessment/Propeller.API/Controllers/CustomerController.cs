@@ -37,6 +37,20 @@ namespace Propeller.API.Controllers
             return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CustomerDto>> RetrieveCustomer(int id)
+        {
+            var customer = await _customerRepo.RetrieveCustomerAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<CustomerDto>(customer));
+        }
+
         /// <summary>
         /// Creates a new Customer 
         /// </summary>
@@ -45,6 +59,9 @@ namespace Propeller.API.Controllers
         [HttpPost]
         public async Task<ActionResult<CustomerDto>> CreateCustomer(CreateCustomerRequest request)
         {
+            // TODO: Add proper validation
+            // TODO: Check why the required validation on the request is not working properly
+
             var newCustomer = _mapper.Map<Customer>(request);
             var result = await _customerRepo.InsertCustomer(newCustomer);
             return new OkResult();
