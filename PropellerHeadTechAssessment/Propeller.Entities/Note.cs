@@ -15,8 +15,6 @@ namespace Propeller.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        // public int CustomerId { get; set; }
-
         [Required, MaxLength(500)]
         public string Text { get; set; } = string.Empty;
 

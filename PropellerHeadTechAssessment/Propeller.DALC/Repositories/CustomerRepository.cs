@@ -29,5 +29,18 @@ namespace Propeller.DALC.Repositories
         {
             return await _customerDbContext.Customers.ToListAsync();
         }
+
+        // TODO: Implement proper error handling routine
+        public async Task<bool> InsertCustomer(Customer newCustomer)
+        {
+            // TODO: Check about trigger usage on sqlite to handle this
+            newCustomer.CreatedOn = DateTime.UtcNow;
+            newCustomer.LastModified = DateTime.UtcNow;
+
+            var response = _customerDbContext.Customers.Add(newCustomer);
+            var result = await _customerDbContext.SaveChangesAsync();
+            return ( result != 0);
+        }
+
     }
 }

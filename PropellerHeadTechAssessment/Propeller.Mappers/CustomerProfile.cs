@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Propeller.Entities;
 using Propeller.Models;
+using Propeller.Models.Requests;
 
 namespace Propeller.Mappers
 {
@@ -9,6 +10,8 @@ namespace Propeller.Mappers
         public CustomerProfile()
         {
             CreateMap<Customer, CustomerDto>();
+            CreateMap<CreateCustomerRequest, CustomerDto>();
+            CreateMap<CreateCustomerRequest, Customer>();
         }
     }
 }

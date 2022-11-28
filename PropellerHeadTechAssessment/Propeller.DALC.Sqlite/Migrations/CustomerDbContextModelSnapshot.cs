@@ -70,6 +70,9 @@ namespace Propeller.DALC.Sqlite.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("CustomerStatusID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("TEXT");
 
@@ -78,12 +81,44 @@ namespace Propeller.DALC.Sqlite.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Status")
+                    b.HasKey("ID");
+
+                    b.HasIndex("CustomerStatusID");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Propeller.Entities.CustomerStatus", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.ToTable("Customers");
+                    b.ToTable("CustomerStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            State = "prospective"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            State = "current"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            State = "non-active"
+                        });
                 });
 
             modelBuilder.Entity("Propeller.Entities.Note", b =>
@@ -125,6 +160,17 @@ namespace Propeller.DALC.Sqlite.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Propeller.Entities.Customer", b =>
+                {
+                    b.HasOne("Propeller.Entities.CustomerStatus", "Status")
+                        .WithMany("Customers")
+                        .HasForeignKey("CustomerStatusID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("Propeller.Entities.Note", b =>
                 {
                     b.HasOne("Propeller.Entities.Customer", "Customer")
@@ -137,6 +183,11 @@ namespace Propeller.DALC.Sqlite.Migrations
             modelBuilder.Entity("Propeller.Entities.Customer", b =>
                 {
                     b.Navigation("Notes");
+                });
+
+            modelBuilder.Entity("Propeller.Entities.CustomerStatus", b =>
+                {
+                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

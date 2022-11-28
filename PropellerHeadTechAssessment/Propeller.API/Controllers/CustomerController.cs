@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
+using Propeller.Entities;
 using Propeller.Models;
+using Propeller.Models.Requests;
 
 namespace Propeller.API.Controllers
 {
@@ -35,6 +37,18 @@ namespace Propeller.API.Controllers
             return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
+        /// <summary>
+        /// Creates a new Customer 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<CustomerDto>> CreateCustomer(CreateCustomerRequest request)
+        {
+            var newCustomer = _mapper.Map<Customer>(request);
+            var result = await _customerRepo.InsertCustomer(newCustomer);
+            return new OkResult();
+        }
 
     }
 }

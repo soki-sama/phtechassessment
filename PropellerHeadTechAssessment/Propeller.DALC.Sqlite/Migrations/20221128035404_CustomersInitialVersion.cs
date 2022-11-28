@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Propeller.DALC.Sqlite.Migrations
 {
     /// <inheritdoc />
-    public partial class CustomersInitialMigration : Migration
+    public partial class CustomersInitialVersion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,19 +30,38 @@ namespace Propeller.DALC.Sqlite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomerStatus",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    State = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerStatus", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    CustomerStatusID = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LastModified = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Customers_CustomerStatus_CustomerStatusID",
+                        column: x => x.CustomerStatusID,
+                        principalTable: "CustomerStatus",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,10 +108,25 @@ namespace Propeller.DALC.Sqlite.Migrations
                         principalColumn: "ID");
                 });
 
+            migrationBuilder.InsertData(
+                table: "CustomerStatus",
+                columns: new[] { "ID", "State" },
+                values: new object[,]
+                {
+                    { 1, "prospective" },
+                    { 2, "current" },
+                    { 3, "non-active" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ContactCustomer_CustomersID",
                 table: "ContactCustomer",
                 column: "CustomersID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_CustomerStatusID",
+                table: "Customers",
+                column: "CustomerStatusID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_CustomerID",
@@ -112,6 +148,9 @@ namespace Propeller.DALC.Sqlite.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "CustomerStatus");
         }
     }
 }

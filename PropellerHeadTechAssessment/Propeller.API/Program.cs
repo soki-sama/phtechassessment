@@ -26,7 +26,9 @@ builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 // Inject Automapper
-builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
+// builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
+builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile).Assembly);
+
 
 var app = builder.Build();
 

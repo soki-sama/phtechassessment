@@ -20,5 +20,18 @@ namespace Propeller.DALC.Sqlite
 
         public DbSet<Note> Notes { get; set; } = null!;
 
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Seed Status catalog
+            modelBuilder.Entity<CustomerStatus>().HasData(
+                new CustomerStatus { ID = 1, State = "prospective" }, // default
+                new CustomerStatus { ID = 2, State = "current" },
+                new CustomerStatus { ID = 3, State = "non-active" }
+                );
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }
