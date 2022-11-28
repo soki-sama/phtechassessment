@@ -21,5 +21,7 @@ namespace Propeller.Entities
 
         public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 
+        public ICollection<Note> Notes { get; set; } = new List<Note>();
+
     }
 }

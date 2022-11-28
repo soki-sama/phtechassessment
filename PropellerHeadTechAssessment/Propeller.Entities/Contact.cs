@@ -28,6 +28,6 @@ namespace Propeller.Entities
         public string PhoneNumber { get; set; }
 
 
-
+        public ICollection<Customer> Customers { get; set; }
     }
 }
