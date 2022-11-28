@@ -18,7 +18,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Propeller.DALC.Sqlite\Propeller.DALC.Sqlite.csproj" />
+    <ProjectReference Include="..\Propeller.DALC\Propeller.DALC.csproj" />
     <ProjectReference Include="..\Propeller.Entities\Propeller.Entities.csproj" />
+    <ProjectReference Include="..\Propeller.Models\Propeller.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

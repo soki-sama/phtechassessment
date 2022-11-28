@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     /// <inheritdoc />
-    public partial class CustomersInitialVersion : Migration
+    public partial class CustomersInitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,8 @@ namespace Propeller.DALC.Sqlite.Migrations
                 name: "Contacts",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     EMail = table.Column<string>(type: "TEXT", nullable: false),
@@ -46,7 +47,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                 name: "ContactCustomer",
                 columns: table => new
                 {
-                    ContactsID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ContactsID = table.Column<int>(type: "INTEGER", nullable: false),
                     CustomersID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

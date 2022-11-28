@@ -1,6 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
+using Propeller.DALC.Interfaces;
+using Propeller.Entities.Interface;
 using Propeller.DALC.Sqlite;
+using Propeller.DALC.Repositories;
 // using Propeller.Entities.DbContexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +16,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Hook up the DbContext
+//builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
+//    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings.CustomersSQLiteConnString"]));
+
 builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
-    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings.CustomersSQLiteConnString"]));
+    dbContextOptions.UseSqlite("Data Source=propeller.db"));
+
+// Inject Repos
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 var app = builder.Build();
 

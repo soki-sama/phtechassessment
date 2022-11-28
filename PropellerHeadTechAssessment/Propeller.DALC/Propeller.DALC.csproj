@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Propeller.DALC.Sqlite\Propeller.DALC.Sqlite.csproj" />
     <ProjectReference Include="..\Propeller.Entities\Propeller.Entities.csproj" />
   </ItemGroup>
 

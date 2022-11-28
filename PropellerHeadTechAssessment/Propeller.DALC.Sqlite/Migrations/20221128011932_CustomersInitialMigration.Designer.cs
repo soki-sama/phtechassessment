@@ -11,8 +11,8 @@ using Propeller.DALC.Sqlite;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    [Migration("20221128004431_CustomersInitialVersion")]
-    partial class CustomersInitialVersion
+    [Migration("20221128011932_CustomersInitialMigration")]
+    partial class CustomersInitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,8 +22,8 @@ namespace Propeller.DALC.Sqlite.Migrations
 
             modelBuilder.Entity("ContactCustomer", b =>
                 {
-                    b.Property<Guid>("ContactsID")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ContactsID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CustomersID")
                         .HasColumnType("INTEGER");
@@ -37,9 +37,9 @@ namespace Propeller.DALC.Sqlite.Migrations
 
             modelBuilder.Entity("Propeller.Entities.Contact", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("EMail")
                         .IsRequired()

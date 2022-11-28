@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Propeller.DALC.Interfaces;
+using Propeller.DALC.Sqlite;
 using Propeller.Entities;
 using Propeller.Entities.Interface;
 using System;
@@ -12,9 +13,9 @@ namespace Propeller.DALC.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private ICustomerDbContext _customerDbContext;
+        private CustomerDbContext _customerDbContext;
 
-        public CustomerRepository(ICustomerDbContext customerDbContext)
+        public CustomerRepository(CustomerDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext ?? throw new ArgumentNullException(nameof(customerDbContext));
         }
@@ -22,7 +23,6 @@ namespace Propeller.DALC.Repositories
         public async Task<Customer?> RetrieveCustomerAsync(int customerId)
         {
             return await _customerDbContext.Customers.FirstOrDefaultAsync(c => c.ID.Equals(customerId));
-
         }
 
         public async Task<IEnumerable<Customer>> RetrieveCustomersAsync()

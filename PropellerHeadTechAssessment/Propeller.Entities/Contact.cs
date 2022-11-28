@@ -13,7 +13,7 @@ namespace Propeller.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid ID { get; set; }
+        public int ID { get; set; }
 
         [Required]
         [MaxLength(100)]
