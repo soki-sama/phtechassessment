@@ -28,6 +28,7 @@ builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 // Inject Repos
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<INotesRepository, NotesRepository>();
+builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
 
 // Inject Automapper
 // builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
