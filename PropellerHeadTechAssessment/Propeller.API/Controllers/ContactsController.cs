@@ -6,8 +6,6 @@ using Propeller.Shared;
 
 namespace Propeller.API.Controllers
 {
-
-
     [ApiController]
     [Route("api/contacts")]
     public class ContactsController : ControllerBase
@@ -33,6 +31,7 @@ namespace Propeller.API.Controllers
         [HttpPost]
         public async Task<ActionResult> AddCustomerContacts(CreateContactRequest request)
         {
+
 
             // TODO: Add validation to either have email and or phone
 

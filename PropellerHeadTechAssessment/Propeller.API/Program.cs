@@ -4,9 +4,19 @@ using Propeller.DALC.Interfaces;
 using Propeller.Entities.Interface;
 using Propeller.DALC.Sqlite;
 using Propeller.DALC.Repositories;
+using NLog.Web;
+using NLog;
 // using Propeller.Entities.DbContexts;
 
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("init main");
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Switch log provider
+// NLog: Setup NLog for Dependency injection
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
 // Add services to the container.
 // TODO: Add proper options to limit pointsof error

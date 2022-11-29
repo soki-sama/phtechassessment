@@ -5,6 +5,7 @@ using Propeller.DALC.Interfaces;
 using Propeller.DALC.Repositories;
 using Propeller.Entities;
 using Propeller.Models;
+using Propeller.Shared;
 
 namespace Propeller.API.Controllers
 {
@@ -33,10 +34,21 @@ namespace Propeller.API.Controllers
 
 
         [HttpGet("{customerId}")]
-        public async Task<ActionResult<CustomerDto>> RetrieveCustomerNotes(int customerId)
+        public async Task<ActionResult<CustomerDto>> RetrieveCustomerNotes(string customerId)
         {
-            var notes = await _notesRepository.RetrieveNotesAsync(customerId);
-            return Ok(_mapper.Map<IEnumerable<NoteDto>>(notes));
+            try
+            {
+                throw new Exception("It haapppens");
+                var notes = await _notesRepository.RetrieveNotesAsync(customerId.Deobfuscate());
+                return Ok(_mapper.Map<IEnumerable<NoteDto>>(notes));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer Notes: CID{customerId}");
+                return StatusCode(500, "An error ocurred. Request can't be processed");
+            }
+
         }
 
         [HttpPost("{customerId}")]
