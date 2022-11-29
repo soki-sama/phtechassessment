@@ -51,10 +51,17 @@ namespace Propeller.API.Controllers
 
         }
 
-        [HttpPost("{customerId}")]
-        public async Task<ActionResult> AddCustomerNote(int customerId,
+        [HttpPost("{id}")]
+        public async Task<ActionResult<NoteDto>> AddCustomerNote(string id,
             [FromForm] string noteText)
         {
+
+            int customerId = Obfuscator.DeobfuscateId(id);
+
+            if(customerId == -1)
+            {
+                return BadRequest();
+            }
 
             // Validate Customr exists
             var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
@@ -71,8 +78,8 @@ namespace Propeller.API.Controllers
                 TimeStamp = DateTime.UtcNow
             };
 
-            await _notesRepository.InsertNoteAsync(note);
-            return Ok();
+            var createdNote = await _notesRepository.InsertNoteAsync(note);
+            return Ok(_mapper.Map<NoteDto>(createdNote));
         }
 
         [HttpPut("{customerId}/{noteId}")]

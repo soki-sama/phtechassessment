@@ -16,7 +16,26 @@ namespace Propeller.Shared
         public static int Deobfuscate(this string value)
         {
             // TODO: Add proper error handling
-            return int.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(value)));
+
+            try
+            {
+                var v = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+
+                if (!int.TryParse(v, out int result))
+                {
+                    throw new Exception("INvalid Value"); // TODO: Add proper exception here
+                }
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
+
     }
 }

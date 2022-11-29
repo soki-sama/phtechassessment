@@ -15,7 +15,7 @@ namespace Propeller.Models.Requests
         [Required]
         public int Status { get; set; }
 
-        public ContactDto Contact { get; set; }
+        public ContactDto? Contact { get; set; }
 
     }
 }

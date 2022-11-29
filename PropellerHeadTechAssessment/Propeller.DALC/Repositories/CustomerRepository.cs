@@ -32,7 +32,7 @@ namespace Propeller.DALC.Repositories
         //}
 
         // TODO: Implement proper error handling routine
-        public async Task<bool> InsertCustomerAsync(Customer newCustomer)
+        public async Task<Customer> InsertCustomerAsync(Customer newCustomer)
         {
             // TODO: Should I return the newly created object?
             // TODO: Check about trigger usage on sqlite to handle this
@@ -41,7 +41,7 @@ namespace Propeller.DALC.Repositories
 
             var response = _customerDbContext.Customers.Add(newCustomer);
             var result = await _customerDbContext.SaveChangesAsync();
-            return (result != 0);
+            return newCustomer;
         }
 
         public async Task<bool> SaveChangesAsync()

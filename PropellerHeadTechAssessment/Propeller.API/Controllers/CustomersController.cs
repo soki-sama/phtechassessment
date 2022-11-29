@@ -150,7 +150,7 @@ namespace Propeller.API.Controllers
 
             var newCustomer = _mapper.Map<Customer>(request);
             var result = await _customerRepo.InsertCustomerAsync(newCustomer);
-            return new OkResult();
+            return Ok(_mapper.Map<CustomerDto>(result));
         }
 
         [HttpPatch("{id}")]

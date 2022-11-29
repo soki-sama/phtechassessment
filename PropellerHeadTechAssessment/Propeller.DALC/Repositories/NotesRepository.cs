@@ -43,12 +43,13 @@ namespace Propeller.DALC.Repositories
 
         }
 
-        public async Task<bool> InsertNoteAsync(Note newNote)
+        public async Task<Note> InsertNoteAsync(Note newNote)
         {
+            // TODO: Maybe I should return null if something went wrong or a tuple, think about it
             // TODO: Should I return the newly created object?
             _customerDbContext.Notes.Add(newNote);
             var result = await _customerDbContext.SaveChangesAsync();
-            return (result != 0);
+            return newNote;
         }
 
         public async Task<Note?> RetrieveNoteAsync(int customerID, int noteID)
