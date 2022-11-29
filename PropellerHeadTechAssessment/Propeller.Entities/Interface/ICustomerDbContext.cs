@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Propeller.Entities.Interface
 {
+    // TODO: Check why this fails if I remove this, it's supposeddly not used
     public interface ICustomerDbContext
     {
         DbSet<Customer> Customers { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Propeller.Entities;
+using Propeller.Models.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Propeller.DALC.Interfaces
     public interface ICustomerRepository
     {
 
-        Task<IEnumerable<Customer>> RetrieveCustomersAsync();
+        // Task<IEnumerable<Customer>> RetrieveCustomersAsync();
+
+        Task<(IEnumerable<Customer> customers, PaginationMeta pagination)> RetrieveCustomersAsync(string? query, int pageNumber, int pageSize);
 
         // Marked Customer as nullable to allow the returned object to be
         // evaluated at the upper most level so theAPI can report back
@@ -21,6 +24,8 @@ namespace Propeller.DALC.Interfaces
         Task<bool> InsertCustomerAsync(Customer newCustomer);
 
         Task<bool> SaveChangesAsync();
+
+        Task<bool> DeleteCustomerAsync(Customer customer);
 
     }
 }

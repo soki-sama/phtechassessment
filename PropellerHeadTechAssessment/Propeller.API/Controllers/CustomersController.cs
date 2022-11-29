@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+// using Newtonsoft.Json;
 using Propeller.DALC.Interfaces;
 using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;
+using System.Text.Json;
 
 namespace Propeller.API.Controllers
 {
@@ -14,19 +16,25 @@ namespace Propeller.API.Controllers
 
     [ApiController]
     [Route("api/customers")]
-    public class CustomerController : ControllerBase
+    public class CustomersController : ControllerBase
     {
-        private readonly ILogger<CustomerController> _logger;
+        private readonly ILogger<CustomersController> _logger;
         private readonly ICustomerRepository _customerRepo;
+        private readonly INotesRepository _notesRepository;
         private readonly IMapper _mapper;
 
-        public CustomerController(
+        private int maxPageSize = 50;
+        private int minPageSize = 5;
+
+        public CustomersController(
             ICustomerRepository customerRepository,
+            INotesRepository notesRepository,
             IMapper mapper,
-            ILogger<CustomerController> logger
+            ILogger<CustomersController> logger
         )
         {
             _customerRepo = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            _notesRepository = notesRepository ?? throw new ArgumentNullException(nameof(notesRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -36,9 +44,38 @@ namespace Propeller.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CustomerDto>>> RetrieveCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDto>>>
+            RetrieveCustomers(
+                [FromQuery(Name = "q")] string? criteria,
+                [FromQuery(Name = "pn")] int pageNumber = 1,
+                [FromQuery(Name = "ps")] int pageSize = 25
+            )
         {
-            var customers = await _customerRepo.RetrieveCustomersAsync();
+            if (pageSize < minPageSize)
+            {
+                pageSize = minPageSize;
+            }
+            else if (pageSize > maxPageSize)
+            {
+                pageSize = maxPageSize;
+            }
+
+            // IEnumerable<Customer> customers = new List<Customer>();
+
+            var (customers, paginationMeta) = await _customerRepo.RetrieveCustomersAsync(criteria, pageNumber, pageSize);
+
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMeta));
+
+            //if (string.IsNullOrEmpty(criteria))
+            //{
+            //    customers = await _customerRepo.RetrieveCustomersAsync();
+            //}
+            //else
+            //{
+
+            //}
+
             return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
@@ -53,14 +90,22 @@ namespace Propeller.API.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<CustomerDto>(customer));
+            // Attach notes
+            var notes = await _notesRepository.RetrieveNotesAsync(id);
+
+            var customerDto = _mapper.Map<CustomerDto>(customer);
+            var notesDto = _mapper.Map<IEnumerable<NoteDto>>(notes);
+
+            customerDto.Notes = notesDto;
+
+            return Ok(customerDto);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<CustomerDto>> UpdateCustomer(int id, UpdateCustomerRequest request)
         {
             var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
-            
+
             if (existingCustomer == null)
             {
                 return NotFound();
@@ -91,7 +136,7 @@ namespace Propeller.API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> PartialUpdateCustomer(int id, 
+        public async Task<ActionResult> PartialUpdateCustomer(int id,
             JsonPatchDocument<UpdateCustomerRequest> requestPatch)
         {
 
@@ -111,6 +156,21 @@ namespace Propeller.API.Controllers
             var result = await _customerRepo.SaveChangesAsync();
             return Ok();
 
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCustomer(int id)
+        {
+            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
+
+            if (existingCustomer == null)
+            {
+                return NotFound();
+            }
+
+            await _customerRepo.DeleteCustomerAsync(existingCustomer);
+
+            return Ok();
         }
 
 

@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // TODO: Add proper options to limit pointsof error
 builder.Services
-    .AddControllers()
-    .AddNewtonsoftJson();
+    .AddControllers();
+    // .AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -27,10 +27,12 @@ builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 
 // Inject Repos
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<INotesRepository, NotesRepository>();
 
 // Inject Automapper
 // builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
-builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
+builder.Services.AddAutoMapper(typeof(Propeller.Mappers.NoteProfile));
 
 
 var app = builder.Build();

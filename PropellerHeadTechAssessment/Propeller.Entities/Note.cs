@@ -22,6 +22,7 @@ namespace Propeller.Entities
 
         [ForeignKey("CustomerID")]
         public Customer? Customer { get; set; }
+        public int CustomerID { get; set; }
 
     }
 
