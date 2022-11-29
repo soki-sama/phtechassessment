@@ -17,6 +17,8 @@ namespace Propeller.DALC.Interfaces
 
         Task<bool> DeleteNoteAsync(int customerID, int noteID);
 
+        Task<bool> DeleteNotesAsync(int customerID);
+
         Task<bool> InsertNoteAsync(Note newNote);
 
         Task<bool> SaveChangesAsync();

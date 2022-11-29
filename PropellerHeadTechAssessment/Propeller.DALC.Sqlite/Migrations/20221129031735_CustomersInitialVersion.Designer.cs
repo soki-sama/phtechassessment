@@ -11,7 +11,7 @@ using Propeller.DALC.Sqlite;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    [Migration("20221128195956_CustomersInitialVersion")]
+    [Migration("20221129031735_CustomersInitialVersion")]
     partial class CustomersInitialVersion
     {
         /// <inheritdoc />
@@ -259,14 +259,14 @@ namespace Propeller.DALC.Sqlite.Migrations
                             ID = 1,
                             CustomerID = 1,
                             Text = "Note 1",
-                            TimeStamp = new DateTime(2022, 11, 28, 19, 59, 56, 337, DateTimeKind.Utc).AddTicks(7070)
+                            TimeStamp = new DateTime(2022, 11, 29, 3, 17, 35, 169, DateTimeKind.Utc).AddTicks(2881)
                         },
                         new
                         {
                             ID = 2,
                             CustomerID = 1,
                             Text = "Note 2",
-                            TimeStamp = new DateTime(2022, 11, 28, 19, 59, 56, 337, DateTimeKind.Utc).AddTicks(7071)
+                            TimeStamp = new DateTime(2022, 11, 29, 3, 17, 35, 169, DateTimeKind.Utc).AddTicks(2884)
                         });
                 });
 

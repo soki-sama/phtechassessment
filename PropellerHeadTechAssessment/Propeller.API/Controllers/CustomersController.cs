@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CSharpVitamins;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 // using Newtonsoft.Json;
@@ -6,6 +7,7 @@ using Propeller.DALC.Interfaces;
 using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;
+using Propeller.Shared;
 using System.Text.Json;
 
 namespace Propeller.API.Controllers
@@ -75,15 +77,31 @@ namespace Propeller.API.Controllers
             //{
 
             //}
+            List<CustomerDto> customersDto = new List<CustomerDto>();
 
-            return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
+            foreach (var customer in customers)
+            {
+                customersDto.Add(
+                    new CustomerDto
+                    {
+                        ID = customer.ID.Obfuscate(),
+                        Name = customer.Name
+                    });
+            }
+
+            return Ok(customersDto);
+
+            // TODO Configure the mapper to use the obfuscator
+            // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
+
+            // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerDto>> RetrieveCustomer(int id)
+        public async Task<ActionResult<CustomerDto>> RetrieveCustomer(string id)
         {
-            var customer = await _customerRepo.RetrieveCustomerAsync(id);
+            var customer = await _customerRepo.RetrieveCustomerAsync(id.Deobfuscate());
 
             if (customer == null)
             {
@@ -91,7 +109,7 @@ namespace Propeller.API.Controllers
             }
 
             // Attach notes
-            var notes = await _notesRepository.RetrieveNotesAsync(id);
+            var notes = await _notesRepository.RetrieveNotesAsync(id.Deobfuscate());
 
             var customerDto = _mapper.Map<CustomerDto>(customer);
             var notesDto = _mapper.Map<IEnumerable<NoteDto>>(notes);
@@ -159,8 +177,18 @@ namespace Propeller.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCustomer(int id)
+        public async Task<ActionResult> DeleteCustomer(int id,
+            [FromQuery(Name = "fd")] string forceDelete = "n")
         {
+            // Retrieve Notes
+            var existingNotes = await _notesRepository.RetrieveNotesAsync(id);
+
+            if (existingNotes.Any() && forceDelete == "n")
+            {
+                return Forbid(); // TODO: Decide on proper response code for this
+            }
+
+
             var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
 
             if (existingCustomer == null)

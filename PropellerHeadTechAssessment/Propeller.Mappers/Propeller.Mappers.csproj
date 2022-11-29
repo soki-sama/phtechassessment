@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Propeller.Entities\Propeller.Entities.csproj" />
     <ProjectReference Include="..\Propeller.Models\Propeller.Models.csproj" />
+    <ProjectReference Include="..\Propeller.Shared\Propeller.Shared.csproj" />
   </ItemGroup>
 
 </Project>

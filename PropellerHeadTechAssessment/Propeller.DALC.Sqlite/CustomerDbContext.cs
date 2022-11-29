@@ -23,6 +23,12 @@ namespace Propeller.DALC.Sqlite
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            SeedSampleData(modelBuilder);
+            base.OnModelCreating(modelBuilder);
+        }
+
+        private static void SeedSampleData(ModelBuilder modelBuilder)
+        {
             // Seed Status catalog
             modelBuilder.Entity<CustomerStatus>().HasData(
                 new CustomerStatus { ID = 1, State = "prospective" }, // default
@@ -32,28 +38,25 @@ namespace Propeller.DALC.Sqlite
 
             // Seed customers for testing filters and pagination
             modelBuilder.Entity<Customer>().HasData(
-                new Customer { ID = 1, Name = "Customer One", CustomerStatusID = 1 },
-                new Customer { ID = 2, Name = "Customer Two", CustomerStatusID = 1 },
-                new Customer { ID = 3, Name = "Customer Three", CustomerStatusID = 1 },
-                new Customer { ID = 4, Name = "Customer Four", CustomerStatusID = 1 },
-                new Customer { ID = 5, Name = "Customer Five", CustomerStatusID = 1 },
-                new Customer { ID = 6, Name = "Customer Six", CustomerStatusID = 1 },
-                new Customer { ID = 7, Name = "Customer Seven", CustomerStatusID = 1 },
-                new Customer { ID = 8, Name = "Customer Nine", CustomerStatusID = 1 },
-                new Customer { ID = 9, Name = "Customer Ten", CustomerStatusID = 1 },
-                new Customer { ID = 10, Name = "Customer Eleven", CustomerStatusID = 1 },
-                new Customer { ID = 11, Name = "Customer Twelve", CustomerStatusID = 1 },
-                new Customer { ID = 12, Name = "Customer Thirteen", CustomerStatusID = 1 },
-                new Customer { ID = 13, Name = "Customer Fourteen", CustomerStatusID = 1 }
+                    new Customer { ID = 1, Name = "Customer One", CustomerStatusID = 1 },
+                    new Customer { ID = 2, Name = "Customer Two", CustomerStatusID = 1 },
+                    new Customer { ID = 3, Name = "Customer Three", CustomerStatusID = 1 },
+                    new Customer { ID = 4, Name = "Customer Four", CustomerStatusID = 1 },
+                    new Customer { ID = 5, Name = "Customer Five", CustomerStatusID = 1 },
+                    new Customer { ID = 6, Name = "Customer Six", CustomerStatusID = 1 },
+                    new Customer { ID = 7, Name = "Customer Seven", CustomerStatusID = 1 },
+                    new Customer { ID = 8, Name = "Customer Nine", CustomerStatusID = 1 },
+                    new Customer { ID = 9, Name = "Customer Ten", CustomerStatusID = 1 },
+                    new Customer { ID = 10, Name = "Customer Eleven", CustomerStatusID = 1 },
+                    new Customer { ID = 11, Name = "Customer Twelve", CustomerStatusID = 1 },
+                    new Customer { ID = 12, Name = "Customer Thirteen", CustomerStatusID = 1 },
+                    new Customer { ID = 13, Name = "Customer Fourteen", CustomerStatusID = 1 }
                 );
 
             modelBuilder.Entity<Note>().HasData(
                     new Note { CustomerID = 1, ID = 1, Text = "Note 1", TimeStamp = DateTime.UtcNow },
                     new Note { CustomerID = 1, ID = 2, Text = "Note 2", TimeStamp = DateTime.UtcNow }
                 );
-
-            base.OnModelCreating(modelBuilder);
         }
-
     }
 }

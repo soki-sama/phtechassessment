@@ -144,8 +144,8 @@ namespace Propeller.DALC.Sqlite.Migrations
                 columns: new[] { "ID", "CustomerID", "Text", "TimeStamp" },
                 values: new object[,]
                 {
-                    { 1, 1, "Note 1", new DateTime(2022, 11, 28, 19, 59, 56, 337, DateTimeKind.Utc).AddTicks(7070) },
-                    { 2, 1, "Note 2", new DateTime(2022, 11, 28, 19, 59, 56, 337, DateTimeKind.Utc).AddTicks(7071) }
+                    { 1, 1, "Note 1", new DateTime(2022, 11, 29, 3, 17, 35, 169, DateTimeKind.Utc).AddTicks(2881) },
+                    { 2, 1, "Note 2", new DateTime(2022, 11, 29, 3, 17, 35, 169, DateTimeKind.Utc).AddTicks(2884) }
                 });
 
             migrationBuilder.CreateIndex(

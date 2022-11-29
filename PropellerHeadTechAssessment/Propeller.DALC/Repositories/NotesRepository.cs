@@ -64,5 +64,14 @@ namespace Propeller.DALC.Repositories
                 .Where(c => c.CustomerID.Equals(customerID)).ToListAsync();
         }
 
+        public async Task<bool> DeleteNotesAsync(int customerID)
+        {
+            var notes = _customerDbContext.Notes.Where(x => x.CustomerID == customerID).ToList();
+
+            _customerDbContext.Notes.RemoveRange(notes);
+            await _customerDbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
