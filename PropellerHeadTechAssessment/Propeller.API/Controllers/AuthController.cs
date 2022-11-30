@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Propeller.Models.Requests;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,11 +12,7 @@ namespace Propeller.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public class AuthRequest
-        {
-            public string uid { get; set; }
-            public string pwd { get; set; }
-        }
+  
 
         private class PropellerUser
         {

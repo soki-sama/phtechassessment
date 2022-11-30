@@ -103,9 +103,16 @@ namespace Propeller.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> RetrieveCustomer(string id)
         {
+            int customerId = -1;
 
             try
             {
+                customerId = id.Deobfuscate();
+
+                if (customerId == -1)
+                {
+                    return BadRequest();
+                }
 
                 var customer = await _customerRepo.RetrieveCustomerAsync(id.Deobfuscate());
 
@@ -127,19 +134,33 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Add logging and return 500
-                throw;
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer. CID:{customerId}");
+                return StatusCode(500, "Unable to retrieve Customer");
             }
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult<CustomerDto>> UpdateCustomer(int id, UpdateCustomerRequest request)
+        public async Task<ActionResult<CustomerDto>> UpdateCustomer(string id, UpdateCustomerRequest request)
         {
+            int customerId = -1;
 
             try
             {
-                var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
+                customerId = id.Deobfuscate();
+
+                if (customerId == -1)
+                {
+                    return BadRequest();
+                }
+
+                var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
 
                 if (existingCustomer == null)
                 {
@@ -154,11 +175,9 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Add logging and return 500
-
-                throw;
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer. CID:{customerId}");
+                return StatusCode(500, "Unable to update Customer");
             }
-
 
         }
 
@@ -173,9 +192,18 @@ namespace Propeller.API.Controllers
             // TODO: Add proper validation
             // TODO: Check why the required validation on the request is not working properly
 
-            var newCustomer = _mapper.Map<Customer>(request);
-            var result = await _customerRepo.InsertCustomerAsync(newCustomer);
-            return Ok(_mapper.Map<CustomerDto>(result));
+            try
+            {
+                var newCustomer = _mapper.Map<Customer>(request);
+                var result = await _customerRepo.InsertCustomerAsync(newCustomer);
+                return Ok(_mapper.Map<CustomerDto>(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Creating Customer");
+                return StatusCode(500, "Unable to create Customer");
+            }
+
         }
 
         /// <summary>

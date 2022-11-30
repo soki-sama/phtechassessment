@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CSharpVitamins;
 using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;

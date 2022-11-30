@@ -44,7 +44,7 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer Notes: CID{customerId}");
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer Notes. CID:{customerId}");
                 return StatusCode(500, "An error ocurred. Request can't be processed");
             }
 
