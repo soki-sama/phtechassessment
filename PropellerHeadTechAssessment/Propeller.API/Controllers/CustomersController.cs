@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CSharpVitamins;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
