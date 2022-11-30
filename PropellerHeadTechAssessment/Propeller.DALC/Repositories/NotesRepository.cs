@@ -20,6 +20,12 @@ namespace Propeller.DALC.Repositories
             _customerDbContext = customerDbContext ?? throw new ArgumentNullException(nameof(customerDbContext));
         }
 
+        /// <summary>
+        /// Deletes a Note from a given customer
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <param name="noteID"></param>
+        /// <returns>True when the record was found and deleted, False otherwise</returns>
         public async Task<bool> DeleteNoteAsync(int customerID, int noteID)
         {
             // TODO: Add proper err handling
@@ -29,10 +35,12 @@ namespace Propeller.DALC.Repositories
             if (note != null)
             {
                 _customerDbContext.Notes.Remove(note);
-                await _customerDbContext.SaveChangesAsync();
+                var result = await _customerDbContext.SaveChangesAsync();
+
+                return (result != 0);
             }
 
-            return true;
+            return false;
         }
 
         // TODO: Add proper error handling

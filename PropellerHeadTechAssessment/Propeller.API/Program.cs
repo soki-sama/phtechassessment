@@ -6,6 +6,8 @@ using Propeller.DALC.Sqlite;
 using Propeller.DALC.Repositories;
 using NLog.Web;
 using NLog;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 // using Propeller.Entities.DbContexts;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -22,7 +24,7 @@ builder.Host.UseNLog();
 // TODO: Add proper options to limit pointsof error
 builder.Services
     .AddControllers();
-    // .AddNewtonsoftJson();
+// .AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,6 +47,19 @@ builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.NoteProfile));
 
+// Attach Auth
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(
+        options => options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:Secret"]))
+        }
+    );
 
 var app = builder.Build();
 
@@ -56,9 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

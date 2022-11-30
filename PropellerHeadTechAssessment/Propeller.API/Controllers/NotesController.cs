@@ -38,7 +38,6 @@ namespace Propeller.API.Controllers
         {
             try
             {
-                throw new Exception("It haapppens");
                 var notes = await _notesRepository.RetrieveNotesAsync(customerId.Deobfuscate());
                 return Ok(_mapper.Map<IEnumerable<NoteDto>>(notes));
 
@@ -58,7 +57,7 @@ namespace Propeller.API.Controllers
 
             int customerId = Obfuscator.DeobfuscateId(id);
 
-            if(customerId == -1)
+            if (customerId == -1)
             {
                 return BadRequest();
             }
@@ -102,10 +101,37 @@ namespace Propeller.API.Controllers
         }
 
         [HttpDelete("{customerId}/{noteId}")]
-        public async Task<ActionResult> DeleteCustomerNote(int customerId, int noteId)
+        public async Task<ActionResult> DeleteCustomerNote(string customerId, int noteId)
         {
-            await _notesRepository.DeleteNoteAsync(customerId, noteId);
-            return NoContent();
+
+            try
+            {
+
+
+                int cid = Obfuscator.DeobfuscateId(customerId);
+
+                if (cid == -1)
+                {
+                    return BadRequest();
+                }
+
+                bool result = await _notesRepository.DeleteNoteAsync(cid, noteId);
+
+                if (result)
+                {
+                    return Ok(); // All good
+                }
+                else
+                {
+                    return NoContent(); // Dismissable 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // TODO: Add logger
+                return StatusCode(500, "Error Ocurred when deleting Note");
+            }
         }
 
     }

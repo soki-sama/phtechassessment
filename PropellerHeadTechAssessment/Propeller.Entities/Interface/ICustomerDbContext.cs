@@ -13,5 +13,6 @@ namespace Propeller.Entities.Interface
         DbSet<Customer> Customers { get; set; }
         DbSet<Contact> Contacts { get; set; }
         DbSet<Note> Notes { get; set; }
+        DbSet<User> Users { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CSharpVitamins;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 // using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;
 using Propeller.Shared;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace Propeller.API.Controllers
@@ -17,6 +19,7 @@ namespace Propeller.API.Controllers
     // TODO: Cleanup
 
     [ApiController]
+    [Authorize]
     [Route("api/customers")]
     public class CustomersController : ControllerBase
     {
@@ -101,39 +104,62 @@ namespace Propeller.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> RetrieveCustomer(string id)
         {
-            var customer = await _customerRepo.RetrieveCustomerAsync(id.Deobfuscate());
 
-            if (customer == null)
+            try
             {
-                return NotFound();
+
+                var customer = await _customerRepo.RetrieveCustomerAsync(id.Deobfuscate());
+
+                if (customer == null)
+                {
+                    return NotFound();
+                }
+
+                // TODO make this next step optional
+                // Attach notes
+                var notes = await _notesRepository.RetrieveNotesAsync(id.Deobfuscate());
+
+                var customerDto = _mapper.Map<CustomerDto>(customer);
+                var notesDto = _mapper.Map<IEnumerable<NoteDto>>(notes);
+
+                customerDto.Notes = notesDto;
+
+                return Ok(customerDto);
+            }
+            catch (Exception ex)
+            {
+                // TODO: Add logging and return 500
+                throw;
             }
 
-            // Attach notes
-            var notes = await _notesRepository.RetrieveNotesAsync(id.Deobfuscate());
-
-            var customerDto = _mapper.Map<CustomerDto>(customer);
-            var notesDto = _mapper.Map<IEnumerable<NoteDto>>(notes);
-
-            customerDto.Notes = notesDto;
-
-            return Ok(customerDto);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<CustomerDto>> UpdateCustomer(int id, UpdateCustomerRequest request)
         {
-            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
 
-            if (existingCustomer == null)
+            try
             {
-                return NotFound();
+                var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
+
+                if (existingCustomer == null)
+                {
+                    return NotFound();
+                }
+
+                _mapper.Map(request, existingCustomer);
+
+                await _customerRepo.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // TODO: Add logging and return 500
+
+                throw;
             }
 
-            _mapper.Map(request, existingCustomer);
-
-            await _customerRepo.SaveChangesAsync();
-
-            return Ok();
 
         }
 
@@ -153,6 +179,12 @@ namespace Propeller.API.Controllers
             return Ok(_mapper.Map<CustomerDto>(result));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="requestPatch"></param>
+        /// <returns></returns>
         [HttpPatch("{id}")]
         public async Task<ActionResult> PartialUpdateCustomer(int id,
             JsonPatchDocument<UpdateCustomerRequest> requestPatch)
@@ -176,20 +208,36 @@ namespace Propeller.API.Controllers
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="forceDelete"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCustomer(int id,
-            [FromQuery(Name = "fd")] string forceDelete = "n")
+        public async Task<ActionResult> DeleteCustomer(string id,
+            [FromQuery(Name = "fd")] string? forceDelete = "n")
         {
-            // Retrieve Notes
-            var existingNotes = await _notesRepository.RetrieveNotesAsync(id);
 
-            if (existingNotes.Any() && forceDelete == "n")
+            int customerId = Obfuscator.DeobfuscateId(id);
+
+            if (customerId == -1)
+            {
+                return BadRequest();
+            }
+
+            // Retrieve Notes
+            var existingNotes = await _notesRepository.RetrieveNotesAsync(customerId);
+
+            // TODO: Add retrieval of contacts
+
+            if (existingNotes.Any() && forceDelete != "y")
             {
                 return Forbid(); // TODO: Decide on proper response code for this
             }
 
 
-            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
+            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
 
             if (existingCustomer == null)
             {
