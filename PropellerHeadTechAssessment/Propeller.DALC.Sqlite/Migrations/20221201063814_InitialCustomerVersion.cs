@@ -49,7 +49,9 @@ namespace Propeller.DALC.Sqlite.Migrations
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Password = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,8 +137,8 @@ namespace Propeller.DALC.Sqlite.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Password", "UserName" },
-                values: new object[] { 1, "s3cUrE.p4s5W0Rd.21", "yami.soki@gmail.com" });
+                columns: new[] { "ID", "Name", "Password", "Role", "UserName" },
+                values: new object[] { 1, "", "s3cUrE.p4s5W0Rd.21", 0, "user.name@mail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactCustomer_CustomersID",

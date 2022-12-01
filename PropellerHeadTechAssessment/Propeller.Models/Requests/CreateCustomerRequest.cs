@@ -13,7 +13,7 @@ namespace Propeller.Models.Requests
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public int Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
         public ContactDto? Contact { get; set; }
 

@@ -14,7 +14,7 @@ namespace Propeller.Mappers
                 .ForMember(d => d.ID, o => o.MapFrom(s => s.ID.Obfuscate()) );
 
             CreateMap<CreateCustomerRequest, Customer>()
-                .ForMember(d => d.CustomerStatusID, o => o.MapFrom(s => s.Status))
+                .ForMember(d => d.CustomerStatusID, o => o.MapFrom(s => s.Status.Deobfuscate()))
                 ;
 
             CreateMap<UpdateCustomerRequest, Customer>()

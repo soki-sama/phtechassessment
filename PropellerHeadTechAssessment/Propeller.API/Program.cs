@@ -42,12 +42,14 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<INotesRepository, NotesRepository>();
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
 builder.Services.AddScoped<ICustomerStatusRepository, CustomerStatusRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
 // Inject Automapper
 // builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.NoteProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.ContactProfile));
+builder.Services.AddAutoMapper(typeof(Propeller.Mappers.UserProfile));
 
 // Attach Auth
 builder.Services.AddAuthentication("Bearer")

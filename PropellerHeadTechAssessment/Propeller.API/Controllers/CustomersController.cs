@@ -88,13 +88,15 @@ namespace Propeller.API.Controllers
             //}
             List<CustomerDto> customersDto = new List<CustomerDto>();
 
+            // TODO: Add automapper
             foreach (var customer in customers)
             {
                 customersDto.Add(
                     new CustomerDto
                     {
                         ID = customer.ID.Obfuscate(),
-                        Name = customer.Name
+                        Name = customer.Name,
+                        Status = customer.CustomerStatusID.Obfuscate(),
                     });
             }
 
@@ -211,6 +213,19 @@ namespace Propeller.API.Controllers
 
             try
             {
+                // Validate the given Customer Status
+                int statusID = Obfuscator.DeobfuscateId(request.Status);
+
+                if (statusID == -1)
+                {
+                    return BadRequest();
+                }
+
+                if (!await _customerStatusRepository.ValidateStatusExists(statusID))
+                {
+                    return BadRequest(); // TODO: Select a proper error code for this
+                }
+
                 // Validate the customer doesn't exist
                 var preExisting = await _customerRepo.RetrieveCustomerByNameAsync(request.Name);
 
@@ -270,6 +285,7 @@ namespace Propeller.API.Controllers
         [HttpPut("{cid}/status/{sid}")]
         public async Task<ActionResult> ChangeCustomerStatus(string cid, string sid)
         {
+            // TODO: Probably should move the new status to the body
             int customerId = -1;
             int statusId = -1;
 

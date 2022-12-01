@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Propeller.Models.Requests
 {
+    [Serializable]
     public class AuthRequest
     {
         [JsonPropertyName("uid")]

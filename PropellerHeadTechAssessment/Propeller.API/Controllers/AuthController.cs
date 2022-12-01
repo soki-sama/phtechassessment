@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Propeller.DALC.Interfaces;
+using Propeller.DALC.Repositories;
+using Propeller.Models;
 using Propeller.Models.Requests;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,28 +16,39 @@ namespace Propeller.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-  
 
-        private class PropellerUser
-        {
-            public string UserName { get; set; }
-            public int Role { get; set; }
+        private readonly IUsersRepository _usersRepository;
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
-        }
-
-        private IConfiguration _configuration;
-
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration,
+            IUsersRepository usersRepository,
+            IMapper mapper,
+            ILogger<AuthController> logger)
         {
             _configuration = configuration;
+            _usersRepository = usersRepository;
+            _mapper = mapper;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("authenticate")]
-        public ActionResult<string> Authenticate(AuthRequest request)
+        public async Task<ActionResult<string>> Authenticate(AuthRequest request)
         {
-            var user = ValidateCreds("", "");
+            (bool Authorized, PropellerUser? User) result = await ValidateCreds(request.UserId, request.Password);
 
-            if (user == null)
+            if (!result.Authorized)
+            {
+                return Unauthorized();
+            }
+
+            if (result.User == null)
             {
                 return Unauthorized();
             }
@@ -51,8 +66,8 @@ namespace Propeller.API.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("sub", user.UserName),
-                new Claim("profile", user.Role.ToString())
+                new Claim("sub", result.User.Name),
+                new Claim("profile", result.User.Role.ToString())
             };
 
             var jwt = new JwtSecurityToken(
@@ -68,13 +83,24 @@ namespace Propeller.API.Controllers
 
         }
 
-        private PropellerUser ValidateCreds(string uid, string pwd)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        private async Task<(bool, PropellerUser?)> ValidateCreds(string uid, string pwd)
         {
-            return new PropellerUser
+            var user = await _usersRepository.ValidateUser(uid, pwd);
+
+            if (user == null)
             {
-                UserName = "yami.soki@gmail.com",
-                Role = 99,
-            };
+                return (false, null);
+            }
+
+            PropellerUser u = _mapper.Map<PropellerUser>(user);
+            // PropellerUser u = new PropellerUser();
+            return (true, u);
         }
 
     }
