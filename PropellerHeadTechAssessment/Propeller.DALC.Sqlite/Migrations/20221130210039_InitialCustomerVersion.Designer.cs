@@ -11,7 +11,7 @@ using Propeller.DALC.Sqlite;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    [Migration("20221130044644_InitialCustomerVersion")]
+    [Migration("20221130210039_InitialCustomerVersion")]
     partial class InitialCustomerVersion
     {
         /// <inheritdoc />
@@ -104,7 +104,7 @@ namespace Propeller.DALC.Sqlite.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("CustomerStatus");
+                    b.ToTable("CustomerStatuses");
 
                     b.HasData(
                         new
@@ -167,6 +167,14 @@ namespace Propeller.DALC.Sqlite.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Password = "s3cUrE.p4s5W0Rd.21",
+                            UserName = "yami.soki@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("ContactCustomer", b =>

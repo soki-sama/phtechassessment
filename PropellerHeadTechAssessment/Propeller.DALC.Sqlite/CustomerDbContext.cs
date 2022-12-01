@@ -16,6 +16,8 @@ namespace Propeller.DALC.Sqlite
 
         public DbSet<Customer> Customers { get; set; } = null!;
 
+        public DbSet<CustomerStatus> CustomerStatuses { get; set; } = null!;
+
         public DbSet<Contact> Contacts { get; set; } = null!;
 
         public DbSet<Note> Notes { get; set; } = null!;

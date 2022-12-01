@@ -12,5 +12,9 @@ namespace Propeller.Models
 
         [JsonPropertyName("notes")]
         public IEnumerable<NoteDto> Notes { get; set; } = new List<NoteDto>();
+
+        [JsonPropertyName("contacts")]
+        public IEnumerable<ContactDto> Contacts { get; set; } = new List<ContactDto>();
+
     }
 }

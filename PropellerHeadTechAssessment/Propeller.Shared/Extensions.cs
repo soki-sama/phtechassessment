@@ -10,6 +10,7 @@ namespace Propeller.Shared
     {
         public static string Obfuscate(this int value)
         {
+            // TODO: Add err handling for mapper
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
         }
 

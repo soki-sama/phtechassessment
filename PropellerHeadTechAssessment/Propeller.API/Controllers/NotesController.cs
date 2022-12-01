@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration.Conventions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
 using Propeller.DALC.Repositories;
@@ -11,6 +12,7 @@ namespace Propeller.API.Controllers
 {
 
     [ApiController]
+    [Authorize]
     [Route("api/notes")]
     public class NotesController : ControllerBase
     {

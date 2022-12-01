@@ -30,7 +30,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerStatus",
+                name: "CustomerStatuses",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
@@ -39,7 +39,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerStatus", x => x.ID);
+                    table.PrimaryKey("PK_CustomerStatuses", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,9 +71,9 @@ namespace Propeller.DALC.Sqlite.Migrations
                 {
                     table.PrimaryKey("PK_Customers", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Customers_CustomerStatus_CustomerStatusID",
+                        name: "FK_Customers_CustomerStatuses_CustomerStatusID",
                         column: x => x.CustomerStatusID,
-                        principalTable: "CustomerStatus",
+                        principalTable: "CustomerStatuses",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -124,7 +124,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "CustomerStatus",
+                table: "CustomerStatuses",
                 columns: new[] { "ID", "State" },
                 values: new object[,]
                 {
@@ -132,6 +132,11 @@ namespace Propeller.DALC.Sqlite.Migrations
                     { 2, "current" },
                     { 3, "non-active" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "ID", "Password", "UserName" },
+                values: new object[] { 1, "s3cUrE.p4s5W0Rd.21", "yami.soki@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactCustomer_CustomersID",
@@ -168,7 +173,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "CustomerStatus");
+                name: "CustomerStatuses");
         }
     }
 }

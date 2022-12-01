@@ -23,9 +23,13 @@ namespace Propeller.DALC.Interfaces
 
         Task<Customer> InsertCustomerAsync(Customer newCustomer);
 
+        Task<Customer?> RetrieveCustomerByNameAsync(string customerName);
+
         Task<bool> SaveChangesAsync();
 
         Task<bool> DeleteCustomerAsync(Customer customer);
+
+        Task<IEnumerable<Customer>> RetrieveCustomersByContact(int contaciId);
 
     }
 }

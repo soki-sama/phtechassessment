@@ -1,12 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
 using Propeller.Entities;
+using Propeller.Models;
+using Propeller.Models.Metadata;
 using Propeller.Models.Requests;
 using Propeller.Shared;
+using System.Text.Json;
 
 namespace Propeller.API.Controllers
 {
     [ApiController]
+    //[Authorize]
     [Route("api/contacts")]
     public class ContactsController : ControllerBase
     {
@@ -14,14 +20,20 @@ namespace Propeller.API.Controllers
 
         private readonly IContactsRepository _contactsRepo;
         private readonly ICustomerRepository _customerRepo;
+        private readonly IMapper _mapper;
+
+        private int maxPageSize = 50;
+        private int minPageSize = 5;
 
         public ContactsController(IContactsRepository contactsRepo,
             ICustomerRepository customerRepository,
+                        IMapper mapper,
             ILogger<CustomersController> logger
         )
         {
             _contactsRepo = contactsRepo ?? throw new ArgumentNullException(nameof(contactsRepo));
             _customerRepo = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -32,30 +44,46 @@ namespace Propeller.API.Controllers
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         [HttpPost]
-        public async Task<ActionResult> AddCustomerContacts(CreateContactRequest request)
+        public async Task<ActionResult> AddContact(CreateContactRequest request)
         {
             // TODO: Add validation to either have email and or phone
 
             try
             {
 
-                var customer = await _customerRepo.RetrieveCustomerAsync(request.CustomerID.Deobfuscate());
-
-                if (customer == null)
-                {
-                    throw new Exception("TEMPORARY EX");
-                }
-
                 Contact contact = new Contact
                 {
                     FirstName = request.FirstName,
                     LastName = request.LastName,
-                    Customers = new List<Customer> { customer },
+                    Customers = new List<Customer>(),
                     EMail = request.Email,
                     PhoneNumber = request.Phone
                 };
 
-                var r = await _contactsRepo.InsertCustomerAsync(contact);
+                // A contact can be associated or not to a Customer
+
+                if (!string.IsNullOrEmpty(request.CustomerID))
+                {
+
+                    int cid = request.CustomerID.Deobfuscate();
+
+                    if (cid == -1)
+                    {
+                        return BadRequest(); // TODO: SHould it be Bad request?
+                    }
+
+                    var customer = await _customerRepo.RetrieveCustomerAsync(request.CustomerID.Deobfuscate());
+
+                    if (customer == null)
+                    {
+                        return NotFound();
+                    }
+
+                    contact.Customers.Add(customer);
+
+                }
+
+                var r = await _contactsRepo.InsertContactAsync(contact);
 
                 // Validate Customr exists
                 //var existingCustomer = await _ _customerRepo.RetrieveCustomerAsync(customerId);
@@ -73,16 +101,142 @@ namespace Propeller.API.Controllers
                 //};
 
                 //await _notesRepository.InsertNoteAsync(note);
+                // return Ok();
+
+                // var newCustomer = _mapper.Map<Customer>(request);
+                // var result = await _customerRepo.InsertCustomerAsync(newCustomer);
+                return Ok(_mapper.Map<ContactDto>(r));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Adding new Contact");
+                return StatusCode(500, "Unable to Add Contact");
+            }
+
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> UpdateContact(int id, UpdateContactRequest request)
+        {
+            try
+            {
+                // TODO: Add validation for email and phone
+
+                var existingContact = await _contactsRepo.RetrieveContact(id);
+
+                if (existingContact == null)
+                {
+                    return NotFound();
+                }
+
+                _mapper.Map(request, existingContact);
+
+                await _customerRepo.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Updating Contact. CID:{id}");
+                return StatusCode(500, "Unable to update Contact");
+            }
+        }
+
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<List<Contact>>> RetrieveContacts(int customerID)
+        //{
+        //    try
+        //    {
+        //        var contacts = await _contactsRepo.RetrieveContacts(customerID);
+        //        return Ok(_mapper.Map<IEnumerable<ContactDto>>(contacts));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Exception ocurred when Retrieving Contacts. CID:{customerID}");
+        //        return StatusCode(500, "Unable to retrieve Contacts");
+        //    }
+        //}
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ContactDto>>> RetrieveContacts(
+                [FromQuery(Name = "q")] string? criteria,
+                [FromQuery(Name = "pn")] int pageNumber = 1,
+                [FromQuery(Name = "ps")] int pageSize = 50
+            )
+        {
+
+            try
+            {
+                if (pageSize < minPageSize)
+                {
+                    pageSize = minPageSize;
+                }
+                else if (pageSize > maxPageSize)
+                {
+                    pageSize = maxPageSize;
+                }
+
+                var result = await _contactsRepo.RetrieveContactsAsync(criteria, pageNumber, pageSize);
+
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.pagination));
+
+                return Ok(_mapper.Map<IEnumerable<ContactDto>>(result.contacts));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception ocurred when Retrieving Contacts");
+                return StatusCode(500, "Unable to retrieve Contacts");
+            }
+        }
+
+        /// <summary>
+        /// Contacts can be associated to one or more customers, if so, we should not delete them
+        /// unless we forcefully want to delete it (flag)
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteContact(
+            [FromRoute(Name = "id")] int contactId,
+            [FromQuery(Name = "fd")] string? forceDelete = "n")
+        {
+
+            try
+            {
+
+                var contact = await _contactsRepo.RetrieveContact(contactId);
+
+                if (contact == null)
+                {
+                    return NotFound();
+                }
+
+                if (contact.Customers.Any() && forceDelete != "y")
+                {
+                    return Forbid();
+                }
+
+                // Remove
+                contact.Customers.Clear();
+                var result = await _contactsRepo.DeleteContactAsync(contact);
+
+                if (!result)
+                {
+                    return NoContent(); // TODO: This would happen if no record was updated
+                }
+
                 return Ok();
 
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Exception ocurred when Retrieving Contacts");
+                return StatusCode(500, "Unable to retrieve Contacts");
             }
 
         }
+
+        // ***
 
     }
 }

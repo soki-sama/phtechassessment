@@ -17,6 +17,6 @@ namespace Propeller.Entities
         [MaxLength(50)]
         public string State { get; set; } = string.Empty;
 
-        public ICollection<Customer> Customers { get; set; }
+        public ICollection<Customer> Customers { get; set; } 
     }
 }

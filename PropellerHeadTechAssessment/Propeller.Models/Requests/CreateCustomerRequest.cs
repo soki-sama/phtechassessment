@@ -10,7 +10,7 @@ namespace Propeller.Models.Requests
     public class CreateCustomerRequest
     {
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         public int Status { get; set; }

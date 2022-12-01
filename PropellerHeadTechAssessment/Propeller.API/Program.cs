@@ -41,11 +41,13 @@ builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<INotesRepository, NotesRepository>();
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
+builder.Services.AddScoped<ICustomerStatusRepository, CustomerStatusRepository>();
 
 // Inject Automapper
 // builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.NoteProfile));
+builder.Services.AddAutoMapper(typeof(Propeller.Mappers.ContactProfile));
 
 // Attach Auth
 builder.Services.AddAuthentication("Bearer")

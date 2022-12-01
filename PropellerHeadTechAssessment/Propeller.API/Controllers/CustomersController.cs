@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 // using Newtonsoft.Json;
 using Propeller.DALC.Interfaces;
+using Propeller.DALC.Repositories;
 using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;
@@ -25,6 +26,8 @@ namespace Propeller.API.Controllers
         private readonly ILogger<CustomersController> _logger;
         private readonly ICustomerRepository _customerRepo;
         private readonly INotesRepository _notesRepository;
+        private readonly IContactsRepository _contactsRepository;
+        private readonly ICustomerStatusRepository _customerStatusRepository;
         private readonly IMapper _mapper;
 
         private int maxPageSize = 50;
@@ -33,12 +36,16 @@ namespace Propeller.API.Controllers
         public CustomersController(
             ICustomerRepository customerRepository,
             INotesRepository notesRepository,
+            IContactsRepository contactsRepository,
+            ICustomerStatusRepository customerStatusRepository,
             IMapper mapper,
             ILogger<CustomersController> logger
         )
         {
             _customerRepo = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
             _notesRepository = notesRepository ?? throw new ArgumentNullException(nameof(notesRepository));
+            _contactsRepository = contactsRepository ?? throw new ArgumentNullException(nameof(contactsRepository));
+            _customerStatusRepository = customerStatusRepository ?? throw new ArgumentNullException(nameof(customerStatusRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -99,7 +106,11 @@ namespace Propeller.API.Controllers
             // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> RetrieveCustomer(string id)
         {
@@ -121,14 +132,20 @@ namespace Propeller.API.Controllers
                     return NotFound();
                 }
 
+                var customerDto = _mapper.Map<CustomerDto>(customer);
+
                 // TODO make this next step optional
                 // Attach notes
-                var notes = await _notesRepository.RetrieveNotesAsync(id.Deobfuscate());
-
-                var customerDto = _mapper.Map<CustomerDto>(customer);
+                var notes = await _notesRepository.RetrieveNotesAsync(customerId);
                 var notesDto = _mapper.Map<IEnumerable<NoteDto>>(notes);
 
                 customerDto.Notes = notesDto;
+
+                // Retrieve Contacts
+                var contacts = await _contactsRepository.RetrieveContactsByCustomerId(customerId);
+                var contactsDto = _mapper.Map<IEnumerable<ContactDto>>(contacts);
+
+                customerDto.Contacts = contactsDto;
 
                 return Ok(customerDto);
             }
@@ -194,8 +211,17 @@ namespace Propeller.API.Controllers
 
             try
             {
+                // Validate the customer doesn't exist
+                var preExisting = await _customerRepo.RetrieveCustomerByNameAsync(request.Name);
+
+                if (preExisting != null)
+                {
+                    return Conflict();
+                }
+
                 var newCustomer = _mapper.Map<Customer>(request);
                 var result = await _customerRepo.InsertCustomerAsync(newCustomer);
+
                 return Ok(_mapper.Map<CustomerDto>(result));
             }
             catch (Exception ex)
@@ -233,6 +259,50 @@ namespace Propeller.API.Controllers
             var result = await _customerRepo.SaveChangesAsync();
             return Ok();
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <param name="sid"></param>
+        /// <returns></returns>
+        [HttpPut("{cid}/status/{sid}")]
+        public async Task<ActionResult> ChangeCustomerStatus(string cid, string sid)
+        {
+            int customerId = -1;
+            int statusId = -1;
+
+            customerId = cid.Deobfuscate();
+            statusId = sid.Deobfuscate();
+
+            if (customerId == -1 || statusId == -1)
+            {
+                return BadRequest();
+            }
+
+            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
+
+            if (existingCustomer == null)
+            {
+                return NotFound();
+            }
+
+            // Verify valid Status Id
+            if (!await _customerStatusRepository.ValidateStatusExists(statusId))
+            {
+                return NotFound(); // TODO: Pick a proper error code for this
+            }
+
+            existingCustomer.CustomerStatusID = statusId;
+            var result = await _customerRepo.SaveChangesAsync();
+
+            if (!result)
+            {
+                return NoContent(); // This would happen if the record was not saved TODO: Check best strategy to address this
+            }
+
+            return Ok();
         }
 
         /// <summary>
