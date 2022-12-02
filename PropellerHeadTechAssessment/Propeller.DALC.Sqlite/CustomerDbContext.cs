@@ -41,7 +41,8 @@ namespace Propeller.DALC.Sqlite
                 );
 
             modelBuilder.Entity<User>().HasData(
-                new User { ID=1, UserName= "user.name@mail.com", Password="s3cUrE.p4s5W0Rd.21" }
+                new User { ID = 1, UserName = "admin@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "Administrator", Role = 99 },
+                new User { ID = 2, UserName = "user@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "Regular User", Role = 1 }
                 );
 
             // Seed customers for testing filters and pagination

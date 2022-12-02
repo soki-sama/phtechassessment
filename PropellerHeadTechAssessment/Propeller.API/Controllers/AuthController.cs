@@ -66,8 +66,8 @@ namespace Propeller.API.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("sub", result.User.Name),
-                new Claim("profile", result.User.Role.ToString())
+                new Claim(Constants.NameClaim, result.User.Name),
+                new Claim(Constants.ProfileClaim, result.User.Role.ToString())
             };
 
             var jwt = new JwtSecurityToken(

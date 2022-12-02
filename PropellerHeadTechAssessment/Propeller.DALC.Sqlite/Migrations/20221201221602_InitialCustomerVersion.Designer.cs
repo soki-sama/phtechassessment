@@ -11,7 +11,7 @@ using Propeller.DALC.Sqlite;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    [Migration("20221201063814_InitialCustomerVersion")]
+    [Migration("20221201221602_InitialCustomerVersion")]
     partial class InitialCustomerVersion
     {
         /// <inheritdoc />
@@ -180,10 +180,18 @@ namespace Propeller.DALC.Sqlite.Migrations
                         new
                         {
                             ID = 1,
-                            Name = "",
-                            Password = "s3cUrE.p4s5W0Rd.21",
-                            Role = 0,
-                            UserName = "user.name@mail.com"
+                            Name = "Administrator",
+                            Password = "s3cUrE.p4s5W0Rd.1",
+                            Role = 99,
+                            UserName = "admin@mail.com"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Name = "Regular User",
+                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Role = 1,
+                            UserName = "user@mail.com"
                         });
                 });
 

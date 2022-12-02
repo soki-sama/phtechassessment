@@ -14,7 +14,7 @@ namespace Propeller.API.Controllers
     [ApiController]
     //[Authorize]
     [Route("api/contacts")]
-    public class ContactsController : ControllerBase
+    public class ContactsController : PropellerControllerBase
     {
         private readonly ILogger<CustomersController> _logger;
 
@@ -51,6 +51,7 @@ namespace Propeller.API.Controllers
             try
             {
 
+                // TODO: Add auto mapping
                 Contact contact = new Contact
                 {
                     FirstName = request.FirstName,

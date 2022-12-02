@@ -138,7 +138,11 @@ namespace Propeller.DALC.Sqlite.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "ID", "Name", "Password", "Role", "UserName" },
-                values: new object[] { 1, "", "s3cUrE.p4s5W0Rd.21", 0, "user.name@mail.com" });
+                values: new object[,]
+                {
+                    { 1, "Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin@mail.com" },
+                    { 2, "Regular User", "s3cUrE.p4s5W0Rd.2", 1, "user@mail.com" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContactCustomer_CustomersID",

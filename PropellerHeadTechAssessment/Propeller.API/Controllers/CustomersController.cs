@@ -21,7 +21,7 @@ namespace Propeller.API.Controllers
     [ApiController]
     [Authorize]
     [Route("api/customers")]
-    public class CustomersController : ControllerBase
+    public class CustomersController : PropellerControllerBase
     {
         private readonly ILogger<CustomersController> _logger;
         private readonly ICustomerRepository _customerRepo;
@@ -62,50 +62,59 @@ namespace Propeller.API.Controllers
                 [FromQuery(Name = "ps")] int pageSize = 25
             )
         {
-            if (pageSize < minPageSize)
+
+            try
             {
-                pageSize = minPageSize;
+                if (pageSize < minPageSize)
+                {
+                    pageSize = minPageSize;
+                }
+                else if (pageSize > maxPageSize)
+                {
+                    pageSize = maxPageSize;
+                }
+
+                // IEnumerable<Customer> customers = new List<Customer>();
+
+                var (customers, paginationMeta) = await _customerRepo.RetrieveCustomersAsync(criteria, pageNumber, pageSize);
+
+
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMeta));
+
+                //if (string.IsNullOrEmpty(criteria))
+                //{
+                //    customers = await _customerRepo.RetrieveCustomersAsync();
+                //}
+                //else
+                //{
+
+                //}
+                List<CustomerDto> customersDto = new List<CustomerDto>();
+
+                // TODO: Add automapper
+                foreach (var customer in customers)
+                {
+                    customersDto.Add(
+                        new CustomerDto
+                        {
+                            ID = customer.ID.Obfuscate(),
+                            Name = customer.Name,
+                            Status = customer.CustomerStatusID.Obfuscate(),
+                        });
+                }
+
+                return Ok(customersDto);
+
+                // TODO Configure the mapper to use the obfuscator
+                // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
+
+                // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
             }
-            else if (pageSize > maxPageSize)
+            catch (Exception ex)
             {
-                pageSize = maxPageSize;
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Customers");
+                return StatusCode(500, "Unable to Retrieve Customers");
             }
-
-            // IEnumerable<Customer> customers = new List<Customer>();
-
-            var (customers, paginationMeta) = await _customerRepo.RetrieveCustomersAsync(criteria, pageNumber, pageSize);
-
-
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMeta));
-
-            //if (string.IsNullOrEmpty(criteria))
-            //{
-            //    customers = await _customerRepo.RetrieveCustomersAsync();
-            //}
-            //else
-            //{
-
-            //}
-            List<CustomerDto> customersDto = new List<CustomerDto>();
-
-            // TODO: Add automapper
-            foreach (var customer in customers)
-            {
-                customersDto.Add(
-                    new CustomerDto
-                    {
-                        ID = customer.ID.Obfuscate(),
-                        Name = customer.Name,
-                        Status = customer.CustomerStatusID.Obfuscate(),
-                    });
-            }
-
-            return Ok(customersDto);
-
-            // TODO Configure the mapper to use the obfuscator
-            // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
-
-            // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Propeller.API.Controllers
     [ApiController]
     // [Authorize]
     [Route("api/status")]
-    public class CustomerStatusController : ControllerBase
+    public class CustomerStatusController : PropellerControllerBase
     {
         private ICustomerStatusRepository _customerStatusRepository;
         private readonly ILogger<CustomersController> _logger;
