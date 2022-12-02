@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Propeller.DALC.Repositories
 {
@@ -54,8 +55,8 @@ namespace Propeller.DALC.Repositories
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public async Task<(IEnumerable<Contact> contacts, PaginationMeta pagination)> 
-            RetrieveContactsAsync(string? query, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Contact> contacts, PaginationMeta pagination)>
+            RetrieveContactsAsync(string searchCriteria, string searchField, int pageNumber, int pageSize)
         {
             var tempColl = _customerDbContext.Contacts as IQueryable<Contact>;
 
@@ -65,11 +66,45 @@ namespace Propeller.DALC.Repositories
             //    tempColl = tempColl.Where(x => x.Name.Equals(filter));
             //}
 
-            if (!string.IsNullOrWhiteSpace(query))
+
+
+            if (string.IsNullOrEmpty(searchField))
             {
-                query = query.Trim();
-                // TODO: Add filtering for Last name too
-                tempColl = tempColl.Where(x => x.FirstName.ToUpper().Contains(query.ToUpper()));
+
+            }
+
+            // If no search criteria is specified, we retrieve everything
+
+            if (!string.IsNullOrEmpty(searchCriteria.Trim()))
+            {
+                if (searchField == "f") // Search only FirstName
+                {
+                    tempColl = tempColl.Where(x => x.FirstName.ToUpper().Contains(searchCriteria.ToUpper()));
+                }
+                else if (searchField == "l") // Search only LastName
+                {
+                    tempColl = tempColl.Where(x => x.LastName.ToUpper().Contains(searchCriteria.ToUpper()));
+                }
+                else if (searchField == "e") // Search only Email
+                {
+                    tempColl = tempColl.Where(x => x.EMail.ToUpper().Contains(searchCriteria.ToUpper()));
+
+                }
+                else if (searchField == "p") // Search only Phone Number
+                {
+                    tempColl = tempColl.Where(x => x.PhoneNumber.ToUpper().Contains(searchCriteria.ToUpper()));
+                }
+                else
+                {
+                    tempColl = tempColl.Where(x =>
+                       x.FirstName.ToUpper().Contains(searchCriteria.ToUpper()) ||
+                       x.LastName.ToUpper().Contains(searchCriteria.ToUpper()) ||
+                       x.EMail.ToUpper().Contains(searchCriteria.ToUpper()) ||
+                       x.PhoneNumber.ToUpper().Contains(searchCriteria.ToUpper())
+                   );
+                }
+
+                // TODO: remove toUpper and use InvariantCase
             }
 
             int totalRecords = await tempColl.CountAsync();
@@ -107,10 +142,10 @@ namespace Propeller.DALC.Repositories
         public async Task<Contact?> RetrieveContact(Contact contact)
         {
             return await _customerDbContext.Contacts.Include(x => x.Customers)
-                .Where(x => 
+                .Where(x =>
                     x.FirstName == contact.FirstName &&
-                    x.LastName == contact.LastName && 
-                    x.EMail== contact.EMail && 
+                    x.LastName == contact.LastName &&
+                    x.EMail == contact.EMail &&
                     x.PhoneNumber == contact.PhoneNumber
                 ).FirstOrDefaultAsync();
         }

@@ -84,7 +84,7 @@ namespace Propeller.API.Controllers
 
                     if (customer == null)
                     {
-                        return NotFound("Customer not Found");
+                        return NotFound("Customer Not Found");
                     }
 
                     newContact.Customers.Add(customer);
@@ -196,7 +196,8 @@ namespace Propeller.API.Controllers
         public async Task<ActionResult<IEnumerable<ContactDto>>> RetrieveContacts(
                 [FromQuery(Name = "q")] string? criteria,
                 [FromQuery(Name = "pn")] int pageNumber = 1,
-                [FromQuery(Name = "ps")] int pageSize = 50
+                [FromQuery(Name = "ps")] int pageSize = 50,
+                [FromQuery(Name = "sf")] string? searchField = ""
             )
         {
 
@@ -211,7 +212,17 @@ namespace Propeller.API.Controllers
                     pageSize = maxPageSize;
                 }
 
-                var result = await _contactsRepo.RetrieveContactsAsync(criteria, pageNumber, pageSize);
+                if (string.IsNullOrEmpty(criteria))
+                {
+                    criteria = string.Empty;
+                }
+
+                if (string.IsNullOrEmpty(searchField))
+                {
+                    searchField = string.Empty;
+                }
+
+                var result = await _contactsRepo.RetrieveContactsAsync(criteria.Trim(), searchField.Trim(), pageNumber, pageSize);
 
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.pagination));
 

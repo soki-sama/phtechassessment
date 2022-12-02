@@ -3,18 +3,31 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Propeller.Models
 {
+    [Serializable]
     public class ContactDto
     {
+        [JsonPropertyName("id")]
         public int Id { get; set; }
+
+        // TODO: Should this be marked as Required if I'm using custom Requests?
         [Required]
+        [JsonPropertyName("firstName")]
         public string FirstName { get; set; } = string.Empty;
+
         [Required]
+        [JsonPropertyName("lastName")]
         public string LastName { get; set; } = string.Empty;
+
+        [JsonPropertyName("email")]
         public string Email { get; set; } = string.Empty;
+
+        [JsonPropertyName("phoneNumber")]
         public string PhoneNumber { get; set; } = string.Empty;
+
     }
 }
