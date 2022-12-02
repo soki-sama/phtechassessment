@@ -43,7 +43,7 @@ namespace Propeller.API.Controllers
         /// <param name="cid"></param>
         /// <returns></returns>
         [HttpGet("{cid}")]
-        public async Task<ActionResult<CustomerDto>> RetrieveCustomerNotes(string cid)
+        public async Task<ActionResult<IEnumerable<NoteDto>>> RetrieveCustomerNotes(string cid)
         {
             int customerId = -1;
 
@@ -68,6 +68,52 @@ namespace Propeller.API.Controllers
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <returns></returns>
+        [HttpGet("{cid}/{noteId}", Name = "GetNote")]
+        public async Task<ActionResult<NoteDto>> RetrieveCustomerNote(string cid, int noteId)
+        {
+            int customerId = -1;
+
+            try
+            {
+
+                customerId = Obfuscator.DeobfuscateId(cid);
+
+                if (customerId == -1)
+                {
+                    return BadRequest();
+                }
+
+                // TODO: Add validation for zero
+
+                var note = await _notesRepository.RetrieveNoteAsync(customerId, noteId);
+
+                if (note == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(_mapper.Map<NoteDto>(note));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer Note. NID:{noteId}");
+                return StatusCode(500, "Unable to Retrieve Note");
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <param name="noteText"></param>
+        /// <returns></returns>
         [HttpPost("{cid}")]
         public async Task<ActionResult<NoteDto>> AddCustomerNote(string cid,
             [FromForm] string? noteText)
@@ -115,7 +161,11 @@ namespace Propeller.API.Controllers
                 };
 
                 var createdNote = await _notesRepository.InsertNoteAsync(note);
-                return Ok(_mapper.Map<NoteDto>(createdNote));
+                return CreatedAtRoute("GetNote",
+                       new { cid = cid, noteId = note.ID.ToString() },
+                      _mapper.Map<NoteDto>(createdNote));
+
+                // return Ok(_mapper.Map<NoteDto>(createdNote));
 
             }
             catch (Exception ex)
@@ -184,7 +234,7 @@ namespace Propeller.API.Controllers
         /// <param name="customerId"></param>
         /// <param name="noteId"></param>
         /// <returns></returns>
-        [HttpDelete("{customerId}/{noteId}")]
+        [HttpDelete("{cid}/{noteId}")]
         public async Task<ActionResult> DeleteCustomerNote(string cid, int noteId)
         {
             int customerId = -1;

@@ -13,7 +13,7 @@ namespace Propeller.API.Controllers
         {
             Claim? profileClaim = User.Claims.FirstOrDefault(x => x.Type == Constants.ProfileClaim);
 
-            if (profileClaim == null || profileClaim.Value != "99")
+            if (profileClaim == null || profileClaim.Value != "99") // TODO: Remove the hard code
             {
                 return false;
             }

@@ -122,7 +122,7 @@ namespace Propeller.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCustomer")]
         public async Task<ActionResult<CustomerDto>> RetrieveCustomer(string id)
         {
             int customerId = -1;
@@ -246,7 +246,11 @@ namespace Propeller.API.Controllers
                 var newCustomer = _mapper.Map<Customer>(request);
                 var result = await _customerRepo.InsertCustomerAsync(newCustomer);
 
-                return Ok(_mapper.Map<CustomerDto>(result));
+                // TODO: Add proper Uri for created object
+                return CreatedAtRoute("GetCustomer",
+                    new { id = newCustomer.ID.Obfuscate() },
+                    _mapper.Map<CustomerDto>(result));
+                // return Ok(_mapper.Map<CustomerDto>(result));
             }
             catch (Exception ex)
             {
@@ -358,6 +362,7 @@ namespace Propeller.API.Controllers
                 return Forbid(); // TODO: Decide on proper response code for this
             }
 
+            await _notesRepository.DeleteNotesAsync(customerId);
 
             var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
 
