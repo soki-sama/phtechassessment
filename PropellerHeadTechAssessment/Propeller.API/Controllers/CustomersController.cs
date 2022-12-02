@@ -295,15 +295,14 @@ namespace Propeller.API.Controllers
         /// <param name="cid"></param>
         /// <param name="sid"></param>
         /// <returns></returns>
-        [HttpPut("{cid}/status/{sid}")]
-        public async Task<ActionResult> ChangeCustomerStatus(string cid, string sid)
+        [HttpPut("{cid}/status")]
+        public async Task<ActionResult> ChangeCustomerStatus(string cid,
+            [FromBody] string sid)
         {
-            // TODO: Probably should move the new status to the body
-            int customerId = -1;
-            int statusId = -1;
 
-            customerId = cid.Deobfuscate();
-            statusId = sid.Deobfuscate();
+            // TODO: Probably should move the new status to the body
+            int customerId = cid.Deobfuscate();
+            int statusId = sid.Deobfuscate();
 
             if (customerId == -1 || statusId == -1)
             {

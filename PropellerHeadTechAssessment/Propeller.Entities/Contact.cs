@@ -17,17 +17,17 @@ namespace Propeller.Entities
 
         [Required]
         [MaxLength(100)]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         [Required, MaxLength(100)]  
-        public string LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
 
 
-        public string EMail { get; set; }
+        public string EMail { get; set; } = string.Empty;
 
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = string.Empty;
 
 
-        public ICollection<Customer> Customers { get; set; }
+        public ICollection<Customer> Customers { get; set; } = new List<Customer>();
     }
 }

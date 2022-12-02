@@ -15,6 +15,8 @@ namespace Propeller.DALC.Interfaces
 
         Task<Contact?> RetrieveContact(int contactId);
 
+        Task<Contact?> RetrieveContact(Contact contact);
+
         Task<List<Contact>> RetrieveContactsByCustomerId(int customerId);
 
         Task<(IEnumerable<Contact> contacts, PaginationMeta pagination)> 

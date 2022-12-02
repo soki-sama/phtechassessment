@@ -6,6 +6,7 @@ using Propeller.Models.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -97,6 +98,22 @@ namespace Propeller.DALC.Repositories
             return (result != 0);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contact"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<Contact?> RetrieveContact(Contact contact)
+        {
+            return await _customerDbContext.Contacts.Include(x => x.Customers)
+                .Where(x => 
+                    x.FirstName == contact.FirstName &&
+                    x.LastName == contact.LastName && 
+                    x.EMail== contact.EMail && 
+                    x.PhoneNumber == contact.PhoneNumber
+                ).FirstOrDefaultAsync();
+        }
 
     }
 }

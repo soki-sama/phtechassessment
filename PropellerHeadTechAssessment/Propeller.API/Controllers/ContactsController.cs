@@ -44,22 +44,29 @@ namespace Propeller.API.Controllers
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         [HttpPost]
-        public async Task<ActionResult> AddContact(CreateContactRequest request)
+        public async Task<ActionResult> CreateContact(CreateContactRequest request)
         {
             // TODO: Add validation to either have email and or phone
 
             try
             {
 
-                // TODO: Add auto mapping
-                Contact contact = new Contact
+                Contact newContact = _mapper.Map<Contact>(request);
+
+                if (string.IsNullOrEmpty(newContact.EMail.Trim()) && 
+                    string.IsNullOrEmpty(newContact.PhoneNumber.Trim()))
                 {
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
-                    Customers = new List<Customer>(),
-                    EMail = request.Email,
-                    PhoneNumber = request.Phone
-                };
+                    return UnprocessableEntity("Email or Phone Required");
+                }
+
+                // The contact might have been added before for another costumer, if so
+                // then attach the existing Contact to the Customer
+                var existingUser = await _contactsRepo.RetrieveContact(newContact);
+
+                if (existingUser != null)
+                {
+                    return Ok(existingUser);
+                }
 
                 // A contact can be associated or not to a Customer
 
@@ -77,14 +84,14 @@ namespace Propeller.API.Controllers
 
                     if (customer == null)
                     {
-                        return NotFound();
+                        return NotFound("Customer not Found");
                     }
 
-                    contact.Customers.Add(customer);
+                    newContact.Customers.Add(customer);
 
                 }
 
-                var r = await _contactsRepo.InsertContactAsync(contact);
+                var contact = await _contactsRepo.InsertContactAsync(newContact);
 
                 // Validate Customr exists
                 //var existingCustomer = await _ _customerRepo.RetrieveCustomerAsync(customerId);
@@ -106,7 +113,12 @@ namespace Propeller.API.Controllers
 
                 // var newCustomer = _mapper.Map<Customer>(request);
                 // var result = await _customerRepo.InsertCustomerAsync(newCustomer);
-                return Ok(_mapper.Map<ContactDto>(r));
+                // return Ok(_mapper.Map<ContactDto>(r));
+                return CreatedAtRoute(
+                        "GetContact",
+                        new { ctid = contact.ID },
+                        _mapper.Map<ContactDto>(contact)
+                );
 
             }
             catch (Exception ex)
@@ -115,6 +127,27 @@ namespace Propeller.API.Controllers
                 return StatusCode(500, "Unable to Add Contact");
             }
 
+        }
+
+        [HttpGet("{ctid}", Name = "GetContact")]
+        public async Task<ActionResult<CustomerDto>> RetrieveContact(int ctid)
+        {
+            try
+            {
+                var existingContact = await _contactsRepo.RetrieveContact(ctid);
+
+                if (existingContact == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(_mapper.Map<ContactDto>(existingContact));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Contact. CID:{ctid}");
+                return StatusCode(500, "Unable to Retrieve Contact");
+            }
         }
 
         [HttpPut("{id}")]
