@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Propeller.DALC.Sqlite
 {
-    public class CustomerDbContext : DbContext, ICustomerDbContext
+    public class PropellerDbContext : DbContext, ICustomerDbContext
     {
-        public CustomerDbContext(DbContextOptions<CustomerDbContext> options)
+        public PropellerDbContext(DbContextOptions<PropellerDbContext> options)
           : base(options) { }
 
         public DbSet<Customer> Customers { get; set; } = null!;

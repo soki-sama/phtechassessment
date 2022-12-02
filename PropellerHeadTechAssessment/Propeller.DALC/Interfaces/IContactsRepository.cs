@@ -22,7 +22,7 @@ namespace Propeller.DALC.Interfaces
         Task<(IEnumerable<Contact> contacts, PaginationMeta pagination)> 
             RetrieveContactsAsync(string searchCriteria, string searchField, int pageNumber, int pageSize);
 
-        Task<bool> DeleteContactAsync(Contact contact);
+        Task<int> DeleteContactAsync(Contact contact);
 
     }
 

@@ -12,9 +12,9 @@ namespace Propeller.DALC.Repositories
 {
     public class CustomerStatusRepository : ICustomerStatusRepository
     {
-        private CustomerDbContext _customerDbContext;
+        private PropellerDbContext _customerDbContext;
 
-        public CustomerStatusRepository(CustomerDbContext customerDbContext)
+        public CustomerStatusRepository(PropellerDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext ?? throw new ArgumentNullException(nameof(customerDbContext));
         }

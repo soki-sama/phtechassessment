@@ -12,10 +12,10 @@ namespace Propeller.DALC.Repositories
 {
     public class NotesRepository : INotesRepository
     {
-        private CustomerDbContext _customerDbContext;
+        private PropellerDbContext _customerDbContext;
 
 
-        public NotesRepository(CustomerDbContext customerDbContext)
+        public NotesRepository(PropellerDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext ?? throw new ArgumentNullException(nameof(customerDbContext));
         }

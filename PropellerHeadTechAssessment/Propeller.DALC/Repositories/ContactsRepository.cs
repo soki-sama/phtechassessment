@@ -15,9 +15,9 @@ namespace Propeller.DALC.Repositories
 {
     public class ContactsRepository : IContactsRepository
     {
-        private CustomerDbContext _customerDbContext;
+        private PropellerDbContext _customerDbContext;
 
-        public ContactsRepository(CustomerDbContext customerDbContext)
+        public ContactsRepository(PropellerDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext ?? throw new ArgumentNullException(nameof(customerDbContext));
         }
@@ -126,11 +126,10 @@ namespace Propeller.DALC.Repositories
         /// <param name="contact"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<bool> DeleteContactAsync(Contact contact)
+        public async Task<int> DeleteContactAsync(Contact contact)
         {
             _customerDbContext.Contacts.Remove(contact);
-            var result = await _customerDbContext.SaveChangesAsync();
-            return (result != 0);
+            return await _customerDbContext.SaveChangesAsync();
         }
 
         /// <summary>

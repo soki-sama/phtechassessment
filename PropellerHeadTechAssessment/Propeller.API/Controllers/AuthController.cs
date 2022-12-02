@@ -41,45 +41,57 @@ namespace Propeller.API.Controllers
         [HttpPost("authenticate")]
         public async Task<ActionResult<string>> Authenticate(AuthRequest request)
         {
-            (bool Authorized, PropellerUser? User) result = await ValidateCreds(request.UserId, request.Password);
 
-            if (!result.Authorized)
+            try
             {
-                return Unauthorized();
+
+
+                (bool Authorized, PropellerUser? User) result = await ValidateCreds(request.UserId, request.Password);
+
+                if (!result.Authorized)
+                {
+                    return Unauthorized();
+                }
+
+                if (result.User == null)
+                {
+                    return Unauthorized();
+                }
+
+                var secret = _configuration["Authentication:Secret"];
+
+                if (string.IsNullOrEmpty(secret))
+                {
+                    _logger.LogError("Unable to retrieve Authentication:Secret from Configuration");
+                    return StatusCode(500, "Error Ocurred");
+                }
+
+                var secKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
+                var signCreds = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(Constants.NameClaim, result.User.Name),
+                    new Claim(Constants.ProfileClaim, result.User.Role.ToString())
+                };
+
+                var jwt = new JwtSecurityToken(
+                    _configuration["Authentication:Issuer"],
+                    _configuration["Authentication:Audience"],
+                    claims,
+                    DateTime.UtcNow,
+                    DateTime.UtcNow.AddHours(24),
+                    signCreds);
+
+                var token = new JwtSecurityTokenHandler().WriteToken(jwt);
+                return Ok(token);
+
             }
-
-            if (result.User == null)
+            catch (Exception ex)
             {
-                return Unauthorized();
+                _logger.LogError(ex, $"Exception ocurred when Authenticating user: {request.UserId}");
+                return StatusCode(500, "Unable to Authenticate");
             }
-
-            // TODO, null check
-            var s = _configuration["Authentication:Secret"];
-
-            if (string.IsNullOrEmpty(s))
-            {
-                return StatusCode(500, "Error ocurred.");
-            }
-
-            var secKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(s));
-            var signCreds = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>
-            {
-                new Claim(Constants.NameClaim, result.User.Name),
-                new Claim(Constants.ProfileClaim, result.User.Role.ToString())
-            };
-
-            var jwt = new JwtSecurityToken(
-                _configuration["Authentication:Issuer"],
-                _configuration["Authentication:Audience"],
-                claims,
-                DateTime.UtcNow,
-                DateTime.UtcNow.AddHours(24),
-                signCreds);
-
-            var token = new JwtSecurityTokenHandler().WriteToken(jwt);
-            return Ok(token);
 
         }
 
@@ -99,7 +111,6 @@ namespace Propeller.API.Controllers
             }
 
             PropellerUser u = _mapper.Map<PropellerUser>(user);
-            // PropellerUser u = new PropellerUser();
             return (true, u);
         }
 

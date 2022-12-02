@@ -9,8 +9,8 @@ using Propeller.DALC.Sqlite;
 
 namespace Propeller.DALC.Sqlite.Migrations
 {
-    [DbContext(typeof(CustomerDbContext))]
-    partial class CustomerDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(PropellerDbContext))]
+    partial class PropellerDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -62,7 +62,7 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Exception ocurred when Retrieving Customer Notes. CID:{customerId}");
+                _logger.LogError(ex, $"Exception ocurred when Retrieving Notes. CID:{customerId}");
                 return StatusCode(500, "Unable to Retrieve Notes");
             }
 
@@ -76,12 +76,9 @@ namespace Propeller.API.Controllers
         [HttpGet("{cid}/{noteId}", Name = "GetNote")]
         public async Task<ActionResult<NoteDto>> RetrieveCustomerNote(string cid, int noteId)
         {
-            int customerId = -1;
-
             try
             {
-
-                customerId = Obfuscator.DeobfuscateId(cid);
+                int customerId = Obfuscator.DeobfuscateId(cid);
 
                 if (customerId == -1)
                 {
@@ -153,7 +150,7 @@ namespace Propeller.API.Controllers
                     return NotFound();
                 }
 
-                Note note = new Note
+                Note note = new()
                 {
                     CustomerID = customerId,
                     Text = noteText,
@@ -170,8 +167,8 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Exception ocurred when Updating Customer Note for Customer: {customerId}");
-                return StatusCode(500, "Unable to Update Note");
+                _logger.LogError(ex, $"Exception ocurred when Adding Note for Customer: {customerId}");
+                return StatusCode(500, "Unable to Add Note");
             }
 
         }
@@ -222,7 +219,7 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Exception ocurred when Updating Customer Note for Customer: {customerId}");
+                _logger.LogError(ex, $"Exception ocurred when Updating Note for Customer: {customerId}");
                 return StatusCode(500, "Unable to Update Note");
             }
 
@@ -241,7 +238,6 @@ namespace Propeller.API.Controllers
 
             try
             {
-
                 if (!ValidateAdmin())
                 {
                     return Forbid();
@@ -268,12 +264,11 @@ namespace Propeller.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Exception ocurred when Deleting Customer Note for Customer: {customerId}");
+                _logger.LogError(ex, $"Exception ocurred when Deleting Note: {noteId} for Customer: {customerId}");
                 return StatusCode(500, "Unable to Delete Note");
             }
 
         }
 
     }
-
 }

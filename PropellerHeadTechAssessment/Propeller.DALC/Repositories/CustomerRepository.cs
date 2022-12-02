@@ -15,14 +15,14 @@ namespace Propeller.DALC.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private CustomerDbContext _customerDbContext;
+        private PropellerDbContext _customerDbContext;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="customerDbContext"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public CustomerRepository(CustomerDbContext customerDbContext)
+        public CustomerRepository(PropellerDbContext customerDbContext)
         {
             _customerDbContext = customerDbContext ?? throw new ArgumentNullException(nameof(customerDbContext));
         }

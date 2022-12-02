@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 //    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings.CustomersSQLiteConnString"]));
 
-builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
+builder.Services.AddDbContext<PropellerDbContext>(dbContextOptions =>
     dbContextOptions.UseSqlite("Data Source=propeller.db"));
 
 // Inject Repos

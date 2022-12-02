@@ -25,10 +25,16 @@ namespace Propeller.API.Controllers
         private int maxPageSize = 50;
         private int minPageSize = 5;
 
-        public ContactsController(IContactsRepository contactsRepo,
-            ICustomerRepository customerRepository,
-                        IMapper mapper,
-            ILogger<CustomersController> logger
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contactsRepo"></param>
+        /// <param name="customerRepository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ContactsController(IContactsRepository contactsRepo, ICustomerRepository customerRepository,
+            IMapper mapper, ILogger<CustomersController> logger
         )
         {
             _contactsRepo = contactsRepo ?? throw new ArgumentNullException(nameof(contactsRepo));
@@ -38,16 +44,13 @@ namespace Propeller.API.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Creates a New Contact
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         [HttpPost]
         public async Task<ActionResult> CreateContact(CreateContactRequest request)
         {
-            // TODO: Add validation to either have email and or phone
-
             try
             {
 
@@ -69,7 +72,6 @@ namespace Propeller.API.Controllers
                 }
 
                 // A contact can be associated or not to a Customer
-
                 if (!string.IsNullOrEmpty(request.CustomerID))
                 {
 
@@ -129,8 +131,13 @@ namespace Propeller.API.Controllers
 
         }
 
+        /// <summary>
+        /// Retrieves a contact by ID
+        /// </summary>
+        /// <param name="ctid">The Contact's ID</param>
+        /// <returns></returns>
         [HttpGet("{ctid}", Name = "GetContact")]
-        public async Task<ActionResult<CustomerDto>> RetrieveContact(int ctid)
+        public async Task<ActionResult<ContactDto>> RetrieveContact(int ctid)
         {
             try
             {
@@ -150,7 +157,13 @@ namespace Propeller.API.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut("{id:long}")]
         public async Task<ActionResult<bool>> UpdateContact(int id, UpdateContactRequest request)
         {
             try
@@ -203,14 +216,8 @@ namespace Propeller.API.Controllers
 
             try
             {
-                if (pageSize < minPageSize)
-                {
-                    pageSize = minPageSize;
-                }
-                else if (pageSize > maxPageSize)
-                {
-                    pageSize = maxPageSize;
-                }
+                if (pageSize < minPageSize) { pageSize = minPageSize; }
+                else if (pageSize > maxPageSize) { pageSize = maxPageSize; }
 
                 if (string.IsNullOrEmpty(criteria))
                 {
@@ -248,7 +255,6 @@ namespace Propeller.API.Controllers
 
             try
             {
-
                 var contact = await _contactsRepo.RetrieveContact(contactId);
 
                 if (contact == null)
@@ -263,14 +269,13 @@ namespace Propeller.API.Controllers
 
                 // Remove
                 contact.Customers.Clear();
-                var result = await _contactsRepo.DeleteContactAsync(contact);
+                int recordsAffected = await _contactsRepo.DeleteContactAsync(contact);
 
-                if (!result)
+                if (recordsAffected == 0) // No data was deleted, no error
                 {
-                    return NoContent(); // TODO: This would happen if no record was updated
-                }
+                    return Ok();                }
 
-                return Ok();
+                return NoContent();
 
             }
             catch (Exception ex)
@@ -280,8 +285,6 @@ namespace Propeller.API.Controllers
             }
 
         }
-
-        // ***
 
     }
 }

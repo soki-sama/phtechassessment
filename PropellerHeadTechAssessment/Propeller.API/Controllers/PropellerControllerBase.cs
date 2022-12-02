@@ -13,14 +13,12 @@ namespace Propeller.API.Controllers
         {
             Claim? profileClaim = User.Claims.FirstOrDefault(x => x.Type == Constants.ProfileClaim);
 
-            if (profileClaim == null || profileClaim.Value != "99") // TODO: Remove the hard code
+            if (profileClaim == null)
             {
                 return false;
             }
 
-            UserProfile cprof;
-
-            if (!Enum.TryParse<UserProfile>(profileClaim.Value, out cprof))
+            if (!Enum.TryParse<UserProfile>(profileClaim.Value, out UserProfile cprof))
             {
                 return false;
             }

@@ -2,14 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-// using Newtonsoft.Json;
 using Propeller.DALC.Interfaces;
-using Propeller.DALC.Repositories;
 using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;
 using Propeller.Shared;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace Propeller.API.Controllers
@@ -271,21 +268,30 @@ namespace Propeller.API.Controllers
             JsonPatchDocument<UpdateCustomerRequest> requestPatch)
         {
 
-            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
-
-            if (existingCustomer == null)
+            try
             {
-                return NotFound();
+                var existingCustomer = await _customerRepo.RetrieveCustomerAsync(id);
+
+                if (existingCustomer == null)
+                {
+                    return NotFound();
+                }
+
+                UpdateCustomerRequest customerPatch = _mapper.Map<UpdateCustomerRequest>(existingCustomer);
+
+                requestPatch.ApplyTo(customerPatch, ModelState);
+
+                _mapper.Map(customerPatch, existingCustomer);
+
+                var result = await _customerRepo.SaveChangesAsync();
+                return Ok();
+
             }
-
-            UpdateCustomerRequest customerPatch = _mapper.Map<UpdateCustomerRequest>(existingCustomer);
-
-            requestPatch.ApplyTo(customerPatch, ModelState);
-
-            _mapper.Map(customerPatch, existingCustomer);
-
-            var result = await _customerRepo.SaveChangesAsync();
-            return Ok();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Partially Updating Customer");
+                return StatusCode(500, "Unable to update Customer");
+            }
 
         }
 
@@ -300,37 +306,46 @@ namespace Propeller.API.Controllers
             [FromBody] string sid)
         {
 
-            // TODO: Probably should move the new status to the body
-            int customerId = cid.Deobfuscate();
-            int statusId = sid.Deobfuscate();
-
-            if (customerId == -1 || statusId == -1)
+            try
             {
-                return BadRequest();
+                // TODO: Probably should move the new status to the body
+                int customerId = cid.Deobfuscate();
+                int statusId = sid.Deobfuscate();
+
+                if (customerId == -1 || statusId == -1)
+                {
+                    return BadRequest();
+                }
+
+                var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
+
+                if (existingCustomer == null)
+                {
+                    return NotFound();
+                }
+
+                // Verify valid Status Id
+                if (!await _customerStatusRepository.ValidateStatusExists(statusId))
+                {
+                    return NotFound(); // TODO: Pick a proper error code for this
+                }
+
+                existingCustomer.CustomerStatusID = statusId;
+                var result = await _customerRepo.SaveChangesAsync();
+
+                if (!result)
+                {
+                    return NoContent(); // This would happen if the record was not saved TODO: Check best strategy to address this
+                }
+
+                return Ok();
+
             }
-
-            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
-
-            if (existingCustomer == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                _logger.LogError(ex, $"Exception ocurred when Changing Customer Status");
+                return StatusCode(500, "Unable to update Customer");
             }
-
-            // Verify valid Status Id
-            if (!await _customerStatusRepository.ValidateStatusExists(statusId))
-            {
-                return NotFound(); // TODO: Pick a proper error code for this
-            }
-
-            existingCustomer.CustomerStatusID = statusId;
-            var result = await _customerRepo.SaveChangesAsync();
-
-            if (!result)
-            {
-                return NoContent(); // This would happen if the record was not saved TODO: Check best strategy to address this
-            }
-
-            return Ok();
         }
 
         /// <summary>
@@ -344,35 +359,45 @@ namespace Propeller.API.Controllers
             [FromQuery(Name = "fd")] string? forceDelete = "n")
         {
 
-            int customerId = Obfuscator.DeobfuscateId(id);
-
-            if (customerId == -1)
+            try
             {
-                return BadRequest();
+                int customerId = Obfuscator.DeobfuscateId(id);
+
+                if (customerId == -1)
+                {
+                    return BadRequest();
+                }
+
+                // Retrieve Notes
+                var existingNotes = await _notesRepository.RetrieveNotesAsync(customerId);
+
+                // TODO: Add retrieval of contacts
+
+                if (existingNotes.Any() && forceDelete != "y")
+                {
+                    return Forbid(); // TODO: Decide on proper response code for this
+                }
+
+                await _notesRepository.DeleteNotesAsync(customerId);
+
+                var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
+
+                if (existingCustomer == null)
+                {
+                    return NotFound();
+                }
+
+                await _customerRepo.DeleteCustomerAsync(existingCustomer);
+
+                return Ok();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exception ocurred when Deleting Customer");
+                return StatusCode(500, "Unable to Delete Customer");
             }
 
-            // Retrieve Notes
-            var existingNotes = await _notesRepository.RetrieveNotesAsync(customerId);
-
-            // TODO: Add retrieval of contacts
-
-            if (existingNotes.Any() && forceDelete != "y")
-            {
-                return Forbid(); // TODO: Decide on proper response code for this
-            }
-
-            await _notesRepository.DeleteNotesAsync(customerId);
-
-            var existingCustomer = await _customerRepo.RetrieveCustomerAsync(customerId);
-
-            if (existingCustomer == null)
-            {
-                return NotFound();
-            }
-
-            await _customerRepo.DeleteCustomerAsync(existingCustomer);
-
-            return Ok();
         }
 
 
