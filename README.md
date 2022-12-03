@@ -52,7 +52,13 @@ In the code base you can find a Folder named "Postman", here you will find sampl
 
 You can also open the PropellerHeadTechAssessment.Tests.sln solution file on Visual Studio and build. This will generate a set of tests to be run from the Test Explorer. It is suggested you install the SpecFlow extension to debug and inspect the Gherkin code easier.
 
-Make sure you specify the proper path for BASEAPIURL to your local instance on the [specflow.json](PropellerHeadTechAssessment/Propeller.Integration.Tests/specflow.json) configuration file, 
+Make sure you specify the proper path for BASEAPIURL to your local instance on the [specflow.json](PropellerHeadTechAssessment/Propeller.Integration.Tests/specflow.json) configuration file.
+
+If done correctly, your tests will run successfully
+
+<p align="center">
+![image](https://user-images.githubusercontent.com/119035054/205457742-4efbdf7f-94d2-47b9-917b-e2e440efcaa2.png)
+</p>
 
 ## API Documentation
 
@@ -118,4 +124,4 @@ I had to refresh my knowledge of Entity Frameworks because for the last 4 years 
 ## Final Words to the Reviewer  
 Please reach out to me if you need any further info regarding the solution, It was really fun to work on this project and I appreciate you dedicating time to review it, if you have any input on what could be performed better please feel free to leave comments on the code or the repo I'd love to get feedback on this. I hope you have as much fun reviewing this as I had coding it, have a good one and Thank you!
 
-![image](https://user-images.githubusercontent.com/119035054/205457742-4efbdf7f-94d2-47b9-917b-e2e440efcaa2.png)
+
