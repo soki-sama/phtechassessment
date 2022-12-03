@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.RegularExpressions;
 
 namespace Propeller.API.Providers
 {

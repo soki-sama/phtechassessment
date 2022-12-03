@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
 using Propeller.Entities;
-using Propeller.Models.Requests;
 using Propeller.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Propeller.Shared;
 
 namespace Propeller.Mappers

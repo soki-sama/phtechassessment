@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Propeller.API.Resources;
 using Propeller.DALC.Interfaces;
-using Propeller.DALC.Repositories;
 using Propeller.Models;
 
 namespace Propeller.API.Controllers

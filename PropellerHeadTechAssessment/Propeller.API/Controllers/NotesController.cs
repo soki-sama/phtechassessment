@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration.Conventions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
-using Propeller.DALC.Repositories;
 using Propeller.Entities;
-using Propeller.Mappers;
 using Propeller.Models;
 using Propeller.Shared;
-using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace Propeller.API.Controllers
 {
@@ -17,7 +12,7 @@ namespace Propeller.API.Controllers
     [ApiController]
     [Authorize]
     [Route("api/notes")]
-    public class NotesController : PropellerControllerBase
+    public class NotesController : ControllerBase
     {
         private readonly ILogger<NotesController> _logger;
         private readonly ICustomerRepository _customerRepo;

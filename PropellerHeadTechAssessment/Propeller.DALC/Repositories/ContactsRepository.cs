@@ -3,13 +3,6 @@ using Propeller.DALC.Interfaces;
 using Propeller.DALC.Sqlite;
 using Propeller.Entities;
 using Propeller.Models.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Propeller.DALC.Repositories
 {

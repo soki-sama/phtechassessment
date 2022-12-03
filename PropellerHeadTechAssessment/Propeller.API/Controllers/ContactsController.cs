@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
 using Propeller.Entities;
 using Propeller.Models;
-using Propeller.Models.Metadata;
 using Propeller.Models.Requests;
 using Propeller.Shared;
 using System.Text.Json;
@@ -12,9 +11,9 @@ using System.Text.Json;
 namespace Propeller.API.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("api/contacts")]
-    public class ContactsController : PropellerControllerBase
+    public class ContactsController : ControllerBase
     {
         private readonly ILogger<CustomersController> _logger;
 

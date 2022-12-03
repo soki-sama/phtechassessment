@@ -1,7 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Propeller.DALC.Interfaces;
-using Propeller.Entities.Interface;
 using Propeller.DALC.Sqlite;
 using Propeller.DALC.Repositories;
 using NLog.Web;
@@ -9,7 +8,6 @@ using NLog;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Globalization;
-using Microsoft.Extensions.Localization;
 using Propeller.API.Providers;
 using System.Security.Claims;
 // using Propeller.Entities.DbContexts;

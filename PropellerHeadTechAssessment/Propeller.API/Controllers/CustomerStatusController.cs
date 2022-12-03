@@ -1,24 +1,28 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Propeller.DALC.Interfaces;
-using Propeller.DALC.Repositories;
 using Propeller.Entities;
 using Propeller.Models;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace Propeller.API.Controllers
 {
     [ApiController]
     // [Authorize]
     [Route("api/status")]
-    public class CustomerStatusController : PropellerControllerBase
+    public class CustomerStatusController : ControllerBase
     {
         private ICustomerStatusRepository _customerStatusRepository;
         private readonly ILogger<CustomerStatusController> _logger;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contactsRepo"></param>
+        /// <param name="customerStatusRepository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CustomerStatusController(IContactsRepository contactsRepo,
                 ICustomerStatusRepository customerStatusRepository,
                 IMapper mapper,
@@ -30,6 +34,10 @@ namespace Propeller.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerStatus>>> RetrieveCustomerStatuses()
         {

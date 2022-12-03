@@ -11,14 +11,12 @@ using System.Text.Json;
 
 namespace Propeller.API.Controllers
 {
-    // TODO: Add model validation
-    // TODO: Add proper return type for requests
     // TODO: Cleanup
 
     [ApiController]
     [Authorize]
     [Route("api/customers")]
-    public class CustomersController : PropellerControllerBase
+    public class CustomersController : ControllerBase
     {
         private readonly ILogger<CustomersController> _logger;
         private readonly ICustomerRepository _customerRepo;
