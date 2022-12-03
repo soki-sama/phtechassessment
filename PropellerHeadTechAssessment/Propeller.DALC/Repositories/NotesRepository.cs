@@ -23,7 +23,6 @@ namespace Propeller.DALC.Repositories
         /// <returns>True when the record was found and deleted, False otherwise</returns>
         public async Task<bool> DeleteNoteAsync(int customerID, int noteID)
         {
-            // TODO: Add proper err handling
             var note = _customerDbContext.Notes.Where(x => x.CustomerID == customerID &&
                 x.ID == noteID).FirstOrDefault();
 
@@ -38,14 +37,20 @@ namespace Propeller.DALC.Repositories
             return false;
         }
 
-        // TODO: Add proper error handling
-        public async Task<bool> SaveChangesAsync()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> SaveChangesAsync()
         {
-            var res = await _customerDbContext.SaveChangesAsync();
-            return (true);
-
+            return await _customerDbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newNote"></param>
+        /// <returns></returns>
         public async Task<Note> InsertNoteAsync(Note newNote)
         {
             // TODO: Maybe I should return null if something went wrong or a tuple, think about it
@@ -55,6 +60,12 @@ namespace Propeller.DALC.Repositories
             return newNote;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <param name="noteID"></param>
+        /// <returns></returns>
         public async Task<Note?> RetrieveNoteAsync(int customerID, int noteID)
         {
             return await _customerDbContext.Notes
@@ -62,12 +73,22 @@ namespace Propeller.DALC.Repositories
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<Note>> RetrieveNotesAsync(int customerID)
         {
             return await _customerDbContext.Notes
                 .Where(c => c.CustomerID.Equals(customerID)).ToListAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteNotesAsync(int customerID)
         {
             var notes = _customerDbContext.Notes.Where(x => x.CustomerID == customerID).ToList();

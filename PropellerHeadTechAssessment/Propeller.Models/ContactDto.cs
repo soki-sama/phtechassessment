@@ -9,7 +9,6 @@ namespace Propeller.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        // TODO: Should this be marked as Required if I'm using custom Requests?
         [Required]
         [JsonPropertyName("firstName")]
         public string FirstName { get; set; } = string.Empty;

@@ -11,7 +11,6 @@ namespace Propeller.Shared
         /// <returns></returns>
         public static string ObfuscateId(int value)
         {
-            // TODO: Add err handling for mapper
             try
             {
                 return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
@@ -36,13 +35,13 @@ namespace Propeller.Shared
 
                 if (!int.TryParse(v, out int result))
                 {
-                    throw new Exception("INvalid Value"); // TODO: Add proper exception here
+                    throw new Exception("INvalid Value");
                 }
 
                 return result;
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return -1;
             }

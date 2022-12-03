@@ -22,8 +22,6 @@ namespace Propeller.Mappers
 
             CreateMap<Customer, UpdateCustomerRequest>()
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.CustomerStatusID));
-
-            // CreateMap<ShortGuid>
         }
     }
 }

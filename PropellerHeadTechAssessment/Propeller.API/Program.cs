@@ -36,6 +36,7 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddDbContext<CustomerDbContext>(dbContextOptions =>
 //    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings.CustomersSQLiteConnString"]));
 
+// TODO: Read conn string from config
 builder.Services.AddDbContext<PropellerDbContext>(dbContextOptions =>
     dbContextOptions.UseSqlite("Data Source=propeller.db"));
 
@@ -48,7 +49,6 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 
 // Inject Automapper
-// builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.NoteProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.ContactProfile));

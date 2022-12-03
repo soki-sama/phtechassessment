@@ -5,9 +5,6 @@ namespace Propeller.DALC.Interfaces
 {
     public interface ICustomerRepository
     {
-
-        // Task<IEnumerable<Customer>> RetrieveCustomersAsync();
-
         Task<(IEnumerable<Customer> customers, PaginationMeta pagination)> 
             RetrieveCustomersAsync(string? query, string? sortField, string? sortDirection, int pageNumber, int pageSize);
 
@@ -21,9 +18,9 @@ namespace Propeller.DALC.Interfaces
 
         Task<Customer?> RetrieveCustomerByNameAsync(string customerName);
 
-        Task<bool> SaveChangesAsync();
+        Task<int> SaveChangesAsync();
 
-        Task<bool> DeleteCustomerAsync(Customer customer);
+        Task<int> DeleteCustomerAsync(Customer customer);
 
         Task<IEnumerable<Customer>> RetrieveCustomersByContact(int contaciId);
 

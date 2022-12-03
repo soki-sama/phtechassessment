@@ -31,8 +31,6 @@ namespace Propeller.DALC.Repositories
         {
             return await _customerDbContext.Contacts.Include(x => x.Customers)
                 .Where(x => x.ID == contactId).FirstOrDefaultAsync();
-
-            // return await _customerDbContext.Contacts.Where(x => x.ID == contactId).FirstOrDefaultAsync();
         }
 
         public async Task<List<Contact>> RetrieveContactsByCustomerId(int customerId)
@@ -53,12 +51,6 @@ namespace Propeller.DALC.Repositories
             RetrieveContactsAsync(string searchCriteria, string searchField, int pageNumber, int pageSize)
         {
             var tempColl = _customerDbContext.Contacts as IQueryable<Contact>;
-
-            //if (!string.IsNullOrWhiteSpace(filter))
-            //{
-            //    filter = filter.Trim();
-            //    tempColl = tempColl.Where(x => x.Name.Equals(filter));
-            //}
 
             // If no search criteria is specified, we retrieve everything
 

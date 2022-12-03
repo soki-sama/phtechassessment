@@ -13,8 +13,6 @@ namespace Propeller.Entities
         [MaxLength(200)]
         public string Name { get; set; } = string.Empty;
 
-        // public int StatusID { get; set; }
-
         [ForeignKey("CustomerStatusID")]
         public CustomerStatus CustomerStatus { get; set; }
         public int CustomerStatusID { get; set; }

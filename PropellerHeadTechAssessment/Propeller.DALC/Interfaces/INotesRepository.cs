@@ -15,6 +15,6 @@ namespace Propeller.DALC.Interfaces
 
         Task<Note> InsertNoteAsync(Note newNote);
 
-        Task<bool> SaveChangesAsync();
+        Task<int> SaveChangesAsync();
     }
 }

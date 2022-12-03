@@ -118,7 +118,7 @@ namespace Propeller.API.Controllers
             {
                 if (string.IsNullOrEmpty(noteText))
                 {
-                    return UnprocessableEntity("Note Text Required"); // TODO: Is this the best error code to return?
+                    return UnprocessableEntity("Note Text Required");
                 }
 
                 if (noteText.Length > 500)
@@ -153,8 +153,6 @@ namespace Propeller.API.Controllers
                        new { cid = cid, noteId = note.ID.ToString() },
                       _mapper.Map<NoteDto>(createdNote));
 
-                // return Ok(_mapper.Map<NoteDto>(createdNote));
-
             }
             catch (Exception ex)
             {
@@ -163,8 +161,6 @@ namespace Propeller.API.Controllers
             }
 
         }
-
-
 
         /// <summary>
         /// 

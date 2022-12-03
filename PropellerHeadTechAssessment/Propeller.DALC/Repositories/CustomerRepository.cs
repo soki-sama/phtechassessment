@@ -30,23 +30,19 @@ namespace Propeller.DALC.Repositories
             return await _customerDbContext.Customers.FirstOrDefaultAsync(c => c.ID.Equals(customerId));
         }
 
-        //public async Task<IEnumerable<Customer>> RetrieveCustomersAsync()
-        //{
-        //    return await _customerDbContext.Customers.ToListAsync();
-        //}
-
-        // TODO: Implement proper error handling routine
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newCustomer"></param>
+        /// <returns></returns>
         public async Task<Customer> InsertCustomerAsync(Customer newCustomer)
         {
-            // TODO: Should I return the newly created object?
-            // TODO: Check about trigger usage on sqlite to handle this
             newCustomer.CreatedOn = DateTime.UtcNow;
             newCustomer.LastModified = DateTime.UtcNow;
 
             _customerDbContext.Customers.Add(newCustomer);
-            var result = await _customerDbContext.SaveChangesAsync();
+            await _customerDbContext.SaveChangesAsync();
 
-            // TODO: Should I check that actually a record was affected? Or we could just check the id on the response
             return newCustomer;
         }
 
@@ -54,11 +50,9 @@ namespace Propeller.DALC.Repositories
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            // TODO: Maybe I should return the records affected so I have better control
-            var res = await _customerDbContext.SaveChangesAsync();
-            return res > 0;
+            return await _customerDbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -66,11 +60,10 @@ namespace Propeller.DALC.Repositories
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteCustomerAsync(Customer customer)
+        public async Task<int> DeleteCustomerAsync(Customer customer)
         {
             _customerDbContext.Customers.Remove(customer);
-            var result = await _customerDbContext.SaveChangesAsync();
-            return (result != 0);
+            return await _customerDbContext.SaveChangesAsync();
         }
 
         /// <summary>
@@ -85,19 +78,7 @@ namespace Propeller.DALC.Repositories
                 int pageNumber, int pageSize)
         {
 
-            //if (string.IsNullOrEmpty(filter) &&
-            //    string.IsNullOrEmpty(query))
-            //{
-            //    return await RetrieveCustomersAsync();
-            //}
-
             var tempColl = _customerDbContext.Customers as IQueryable<Customer>;
-
-            //if (!string.IsNullOrWhiteSpace(filter))
-            //{
-            //    filter = filter.Trim();
-            //    tempColl = tempColl.Where(x => x.Name.Equals(filter));
-            //}
 
             if (!string.IsNullOrWhiteSpace(query))
             {
@@ -114,7 +95,6 @@ namespace Propeller.DALC.Repositories
 
             var paginationMeta = new PaginationMeta(totalRecords, pageSize, pageNumber);
 
-            // TODO: Add sorting
             var records = await tempColl
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -123,6 +103,13 @@ namespace Propeller.DALC.Repositories
             return (records, paginationMeta);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sortField"></param>
+        /// <param name="sortDirection"></param>
+        /// <param name="tempColl"></param>
+        /// <returns></returns>
         private static IQueryable<Customer> ConfigureSorting(string sortField, string? sortDirection, IQueryable<Customer> tempColl)
         {
             if (!string.IsNullOrEmpty(sortDirection)) // Sort
@@ -174,7 +161,6 @@ namespace Propeller.DALC.Repositories
         public async Task<Customer?> RetrieveCustomerByNameAsync(string customerName)
         {
             return await _customerDbContext.Customers.Where(x => x.Name.ToUpper().Equals(customerName.ToUpper())).FirstOrDefaultAsync();
-            // tempColl = tempColl.Where(x => x.Name.ToUpper().Contains(query.ToUpper()));
         }
 
     }

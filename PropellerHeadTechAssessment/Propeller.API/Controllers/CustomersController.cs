@@ -71,22 +71,12 @@ namespace Propeller.API.Controllers
                     pageSize = maxPageSize;
                 }
 
-                // IEnumerable<Customer> customers = new List<Customer>();
-
-                var (customers, paginationMeta) = await 
+                var (customers, paginationMeta) = await
                     _customerRepo.RetrieveCustomersAsync(criteria, sortField, sortDirection, pageNumber, pageSize);
 
 
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMeta));
 
-                //if (string.IsNullOrEmpty(criteria))
-                //{
-                //    customers = await _customerRepo.RetrieveCustomersAsync();
-                //}
-                //else
-                //{
-
-                //}
                 List<CustomerDto> customersDto = new List<CustomerDto>();
 
                 // TODO: Add automapper
@@ -103,10 +93,7 @@ namespace Propeller.API.Controllers
 
                 return Ok(customersDto);
 
-                // TODO Configure the mapper to use the obfuscator
-                // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
-
-                // return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
+                // TODO: Configure the mapper to use the obfuscator
             }
             catch (Exception ex)
             {
@@ -246,11 +233,9 @@ namespace Propeller.API.Controllers
                 var newCustomer = _mapper.Map<Customer>(request);
                 var result = await _customerRepo.InsertCustomerAsync(newCustomer);
 
-                // TODO: Add proper Uri for created object
                 return CreatedAtRoute("GetCustomer",
                     new { id = newCustomer.ID.Obfuscate() },
                     _mapper.Map<CustomerDto>(result));
-                // return Ok(_mapper.Map<CustomerDto>(result));
             }
             catch (Exception ex)
             {
@@ -332,13 +317,13 @@ namespace Propeller.API.Controllers
                 // Verify valid Status Id
                 if (!await _customerStatusRepository.ValidateStatusExists(statusId))
                 {
-                    return BadRequest(); // TODO: Pick a proper error code for this
+                    return BadRequest();
                 }
 
                 existingCustomer.CustomerStatusID = statusId;
                 var result = await _customerRepo.SaveChangesAsync();
 
-                if (!result)
+                if (result == 0)
                 {
                     return NoContent(); // This would happen if the record was not saved TODO: Check best strategy to address this
                 }
@@ -376,8 +361,6 @@ namespace Propeller.API.Controllers
 
                 // Retrieve Notes
                 var existingNotes = await _notesRepository.RetrieveNotesAsync(customerId);
-
-                // TODO: Add retrieval of contacts
 
                 if (existingNotes.Any() && forceDelete != "y")
                 {
