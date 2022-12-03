@@ -5,6 +5,11 @@ __*This service can be deployed at any time*__
 ## Table of Contents
 * [Quickstart](#quickstart)  
 * [Repository Contents](#repository-contents)  
+* [How to Run](#how-to-run)  
+* [How to Test](#how-to-test)  
+* [API Documentation](#api-documentation)
+* [Features](#features) 
+* [Features I wanted to implement but ran out of time](#features-i-wanted-to-implement-but-ran-out-of-time)
 
 ## Quickstart  
 ### Requirements
@@ -26,7 +31,7 @@ __*PropellerHeadTechAssessment.Tests.sln:*__ Contains Integration Tests
 
 ## How to Run
 
-After cloning the GitHub repository
+After cloning the GitHub repository:
 
 1.- Open an Administrator Power Shell Console  
 2.- Navigate to the location of the Propeller.API.csproj (Main Application)  
@@ -86,7 +91,7 @@ The DB contains approaches to use one-to-many and many-to-many relations. The Cu
 I try to stick as much as possible to Native libraries and custom code whenever possible. You'll notice the application uses only a few 3rd party packages and they are used on the Integration Tests project (Specflow, FluentAssertions and NUnit) and one on the main app (AutoMapper). I prefer to use 3rd party libraries only when they provide a clear advantage (Security, Performance) over custom implementations, exploits on 3rd party libraries are very risky and I've seen many companies don't have a proper culture of active monitoring and updating of libraries to diminish risk
 
 
-## Features I wanted to implement but didn't have the time to:
+## Features I wanted to implement but ran out of time:
 - OAuth2
 - Unit Tests
 - DALC Factory: I wanted to implement a SQL Server alternative to the SQLite approach, if you see the project structure you'll notice I use Entity Framework (Code First) and the Schemas are separated from the actual DB Context, this was created so I could generate the migrations for other DB providers and my intent was to implement a factory or strategy pattern to allow switching DB's for development and production environments.
