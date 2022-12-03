@@ -59,14 +59,11 @@ namespace Propeller.Integration.Tests.StepDefinitions
 
             if (result.ApiResponse.StatusCode == HttpStatusCode.Created)
             {
-                Assert.IsNotNull(result.Contact);
-
-                // Save the Id for the newly created Contact
-                // _currentCustomer = result.Customer; // TODO: Should I clean this up and use it like this or inside a context?
-                _scenarioContext.Set(result.Contact.Id, ContextKeys.NewContactId);
+                // Assert.IsNotNull(result.Contact);
+                SetScenarioCurrentContact(result.Contact);
             }
 
-            _scenarioContext.Set(result.ApiResponse.StatusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result.ApiResponse.StatusCode);
             _scenarioContext.Set(result.ApiResponse, ContextKeys.LastReturnedApiResponse);
 
         }
@@ -85,7 +82,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
             // Search should return Ok regardless of result
             Assert.AreEqual(HttpStatusCode.OK, result.statusCode);
 
-            _scenarioContext.Set(result.contacts, ContextKeys.FoundCustomers);
+            _scenarioContext.Set(result.contacts, ContextKeys.FoundContacts);
         }
 
         [Then(@"I verify only (.*) record\(s\) were retrieved")]
@@ -110,7 +107,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I should have retrieved (.*) Contact\(s\)")]
         public void WhenIShouldHaveRetrievedContactS(int contactsExpected)
         {
-            List<ContactDto> contacts = _scenarioContext.Get<List<ContactDto>>(ContextKeys.FoundCustomers);
+            List<ContactDto> contacts = _scenarioContext.Get<List<ContactDto>>(ContextKeys.FoundContacts);
 
             if (contacts == null)
             {
@@ -123,7 +120,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I check the Contact has First Name: ""([^""]*)"" and Last Name: ""([^""]*)""")]
         public void ThenICheckTheContactHasFirstNameAndLastName(string firstName, string lastName)
         {
-            List<ContactDto> contacts = _scenarioContext.Get<List<ContactDto>>(ContextKeys.FoundCustomers);
+            List<ContactDto> contacts = _scenarioContext.Get<List<ContactDto>>(ContextKeys.FoundContacts);
 
             if (contacts == null)
             {
@@ -168,14 +165,15 @@ namespace Propeller.Integration.Tests.StepDefinitions
 
             if (result.ApiResponse.StatusCode == HttpStatusCode.Created)
             {
-                Assert.IsNotNull(result.Contact);
+                // Assert.IsNotNull(result.Contact);
 
                 // Save the Id for the newly created Contact
+                SetScenarioCurrentContact(result.Contact);
                 // _currentCustomer = result.Customer; // TODO: Should I clean this up and use it like this or inside a context?
-                _scenarioContext.Set(result.Contact.Id, ContextKeys.NewContactId);
+                // _scenarioContext.Set(result.Contact.Id, ContextKeys.NewContactId);
             }
 
-            _scenarioContext.Set(result.ApiResponse.StatusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result.ApiResponse.StatusCode);
             _scenarioContext.Set(result.ApiResponse, ContextKeys.LastReturnedApiResponse);
 
         }
@@ -187,12 +185,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I verify it contains a Contact with Email: ""([^""]*)""")]
         public void ThenIVerifyItContainsAContactWithEmail(string email)
         {
-            CustomerDto customer = _scenarioContext.Get<CustomerDto>(ContextKeys.CurrentCustomer);
-
-            if (customer == null)
-            {
-                Assert.Fail("Unable to retrieve Customer"); // TODO: Change this description
-            }
+            CustomerDto customer = GetScenarioCurrentCustomer();
 
             customer.Contacts.Should().HaveCountGreaterThanOrEqualTo(1);
 
@@ -227,14 +220,9 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [When(@"I forcefully remove the recently created Contact")]
         public async Task WhenIRemoveTheRecentlyCreatedContact()
         {
-            int newContactId;
-
-            if (!_scenarioContext.TryGetValue<int>(ContextKeys.NewContactId, out newContactId))
-            {
-                Assert.Fail("Unable to retrieve Newly Created ContactId");
-            }
-
-            HttpStatusCode statusCode = await _contactDriver.DeleteContact(newContactId, true);
+            ContactDto contact = GetScenarioCurrentContact();
+            
+            HttpStatusCode statusCode = await _contactDriver.DeleteContact(contact.Id, true);
 
             Assert.AreEqual(HttpStatusCode.NoContent, statusCode);
         }
@@ -242,14 +230,9 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I verify it does not contain a Contact with Email: ""([^""]*)""")]
         public void ThenIVerifyItDoesNotContainAContactWithEmail(string p0)
         {
+            CustomerDto customer = GetScenarioCurrentCustomer();
 
-            CustomerDto customer;
-
-            if (!_scenarioContext.TryGetValue<CustomerDto>(ContextKeys.CurrentCustomer, out customer))
-            {
-                Assert.Fail("Unable to Retrieve Current Customer");
-            }
-
+            // TODO: Missing search
             customer.Contacts.Should().HaveCount(0);
         }
 
@@ -262,7 +245,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
         public async Task WhenITryToDeleteAContactWithId(int contactId)
         {
             HttpStatusCode statusCode = await _contactDriver.DeleteContact(contactId, true);
-            _scenarioContext.Set(statusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(statusCode);
         }
 
         /// <summary>
@@ -272,35 +255,12 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [When(@"I non forcefully try to remove the recently created Contact")]
         public async Task WhenINonForcefullyTryToRemoveTheRecentlyCreatedContact()
         {
-            int contactId;
+            ContactDto contact = GetScenarioCurrentContact();
 
-            if (!_scenarioContext.TryGetValue<int>(ContextKeys.NewContactId, out contactId))
-            {
-                Assert.Fail("Unable to retrieve the last created ContactId");
-            }
+            HttpStatusCode result = await _contactDriver.DeleteContact(contact.Id, false);
 
-            HttpStatusCode result = await _contactDriver.DeleteContact(contactId, false);
-
-            _scenarioContext.Set(result, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result);
         }
 
-
-        [Given(@"I am working")]
-        public void GivenIAmWorking()
-        {
-            throw new PendingStepException();
-        }
-
-        [When(@"I try comething")]
-        public void WhenITryComething()
-        {
-            throw new PendingStepException();
-        }
-
-        [Then(@"I check this")]
-        public void ThenICheckThis()
-        {
-            throw new PendingStepException();
-        }
     }
 }

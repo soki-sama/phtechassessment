@@ -138,7 +138,7 @@ namespace Propeller.Integration.Tests.Drivers
 
 
 
-                Uri uri = new($"{baseUrl}/{customersRoute}/{customerId}?fd={(forceDelete ? "y":"n")}");
+                Uri uri = new($"{baseUrl}/{customersRoute}/{customerId}?fd={(forceDelete ? "y" : "n")}");
 
                 string token = RetrieveCurrentUserToken();
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -193,7 +193,7 @@ namespace Propeller.Integration.Tests.Drivers
 
                 if (statusCode == HttpStatusCode.Created)
                 {
-           
+
                     var customerCreated = JsonSerializer.Deserialize<CustomerDto>(responseContent);
 
                     // This will be done on a per needed basis

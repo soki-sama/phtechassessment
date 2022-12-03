@@ -22,6 +22,7 @@ namespace Propeller.Integration.Tests.Features
     [NUnit.Framework.TestFixtureAttribute()]
     [NUnit.Framework.DescriptionAttribute("CustomerManagement")]
     [NUnit.Framework.CategoryAttribute("RequiresAdminUser")]
+    [NUnit.Framework.CategoryAttribute("RequiresPowerUser")]
     [NUnit.Framework.CategoryAttribute("RequiresRegularUser")]
     public partial class CustomerManagementFeature
     {
@@ -30,6 +31,7 @@ namespace Propeller.Integration.Tests.Features
         
         private string[] _featureTags = new string[] {
                 "RequiresAdminUser",
+                "RequiresPowerUser",
                 "RequiresRegularUser"};
         
 #line 1 "CustomerManagement.feature"
@@ -41,6 +43,7 @@ namespace Propeller.Integration.Tests.Features
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CustomerManagement", "A short summary of the feature", ProgrammingLanguage.CSharp, new string[] {
                         "RequiresAdminUser",
+                        "RequiresPowerUser",
                         "RequiresRegularUser"});
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -88,7 +91,7 @@ namespace Propeller.Integration.Tests.Features
                     "tag1"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add a new Customer", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 9
+#line 10
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -108,23 +111,23 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 10
+#line 11
  testRunner.Given("I use an Authenticated \"admin\" User", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 11
+#line 12
     testRunner.When("I try to create a Customer with name: \"[Test] New Customer Test\" and Status: \"pro" +
                         "spective\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 12
+#line 13
     testRunner.Then("I search for Customers with name: \"[Test] New Customer Test\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 13
+#line 14
     testRunner.And("I should have 1 record(s) found", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 14
+#line 15
     testRunner.Then("I delete the Customer with name: \"[Test] New Customer Test\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 15
+#line 16
     testRunner.And("I Verify the Customer does not exist anymore", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -138,7 +141,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Try to add a duplicated Customer", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 18
+#line 19
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -158,30 +161,30 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 19
+#line 20
  testRunner.Given("I use an Authenticated \"admin\" User", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 20
+#line 21
     testRunner.When("I try to create a Customer with name: \"New Customer DupTest\" and Status: \"prospec" +
                         "tive\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 21
-    testRunner.Then("I search for Customers with name: \"New Customer DupTest\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 22
-    testRunner.And("I should have 1 record(s) found", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Then("I search for Customers with name: \"New Customer DupTest\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 23
+    testRunner.And("I should have 1 record(s) found", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 24
     testRunner.When("I try to create a Customer with name: \"New Customer DupTest\" and Status: \"prospec" +
                         "tive\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 24
+#line 25
     testRunner.Then("I verify the returned Http Status Code was \"409\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 26
+#line 27
     testRunner.Then("I delete the Customer with name: \"New Customer DupTest\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 27
+#line 28
     testRunner.And("I Verify the Customer does not exist anymore", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -195,7 +198,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Change a Customer\'s status", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 29
+#line 30
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -215,23 +218,26 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 30
+#line 31
  testRunner.Given("I use an Authenticated \"admin\" User", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 31
+#line 32
     testRunner.When("I try to create a Customer with name: \"[Test] Customer Status Change\" and Status:" +
                         " \"prospective\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 32
-    testRunner.Then("I try to change the Customer Status to: \"current\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
 #line 33
-    testRunner.Then("I retrieve a Single Customer with name: \"[Test] Customer Status Change\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+     testRunner.Then("I verify the returned Http Status Code was \"201\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 34
-    testRunner.And("I verify the Customer Status is \"current\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Then("I change the Customer Status to: \"current\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 35
+    testRunner.Then("I retrieve a Single Customer with name: \"[Test] Customer Status Change\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 36
+    testRunner.And("I verify the Customer Status is \"current\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 37
     testRunner.Then("I delete the Customer with name: \"[Test] Customer Status Change\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -245,7 +251,7 @@ this.ScenarioInitialize(scenarioInfo);
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Try to set an invalid Customer Status", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 37
+#line 39
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -265,15 +271,21 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 38
+#line 40
  testRunner.Given("I use an Authenticated \"admin\" User", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 39
+#line 41
     testRunner.When("I try to create a Customer with name: \"[Test] New Customer Invalid Status\" and St" +
                         "atus: \"prospective\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 40
-    testRunner.Then("I try to change the Customer Status to \"invalid\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 42
+    testRunner.Then("I verify the returned Http Status Code was \"201\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 43
+    testRunner.Then("I try to change the Customer Status to and Invalid value", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 45
+    testRunner.Then("I verify the returned Http Status Code was \"400\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

@@ -94,16 +94,14 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I verify the returned Http Status Code was ""(.*)""")]
         public void ThenIVerifyTheReturnedStatusCodeWas(HttpStatusCode expectedStatusCode)
         {
-            HttpStatusCode statusCode;
-
-            if (!_scenarioContext.TryGetValue<HttpStatusCode>(ContextKeys.LastReturnedStatusCode, out statusCode))
-            {
-                Assert.Fail($"Unable to Retrieve {ContextKeys.LastReturnedStatusCode}");
-            }
-
+            HttpStatusCode statusCode = GetScenarioLatestStatusCode();
             Assert.AreEqual(expectedStatusCode, statusCode);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [After]
         public async Task AfterScenarioTestCleanup()
         {

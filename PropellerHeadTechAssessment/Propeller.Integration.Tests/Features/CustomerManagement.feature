@@ -1,4 +1,5 @@
 ﻿@RequiresAdminUser
+@RequiresPowerUser
 @RequiresRegularUser
 
 Feature: CustomerManagement
@@ -29,7 +30,8 @@ Scenario: Try to add a duplicated Customer
 Scenario: Change a Customer's status
 	Given I use an Authenticated "admin" User
     When I try to create a Customer with name: "[Test] Customer Status Change" and Status: "prospective"
-    Then I try to change the Customer Status to: "current"
+    	Then I verify the returned Http Status Code was "201"
+    Then I change the Customer Status to: "current"
     Then I retrieve a Single Customer with name: "[Test] Customer Status Change"
     And I verify the Customer Status is "current"
     Then I delete the Customer with name: "[Test] Customer Status Change"
@@ -37,4 +39,7 @@ Scenario: Change a Customer's status
     Scenario: Try to set an invalid Customer Status
 	Given I use an Authenticated "admin" User
     When I try to create a Customer with name: "[Test] New Customer Invalid Status" and Status: "prospective"
-    Then I try to change the Customer Status to "invalid"
+    Then I verify the returned Http Status Code was "201"
+    Then I try to change the Customer Status to and Invalid value
+    #400 BadRequest
+    Then I verify the returned Http Status Code was "400"

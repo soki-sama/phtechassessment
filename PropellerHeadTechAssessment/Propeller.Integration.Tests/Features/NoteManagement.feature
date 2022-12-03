@@ -1,4 +1,5 @@
 ﻿@RequiresAdminUser
+@RequiresPowerUser
 @RequiresRegularUser
 
 Feature: NoteManagement
@@ -9,7 +10,7 @@ Background: I have successfully Authenticated as "admin,user"
 
 @tag1
 Scenario: Add a new Note to a Customer then Delete it
-Given I use an Authenticated "admin" User
+	Given I use an Authenticated "admin" User
 	#Given I am Authenticated as "admin"
 	When I try to create a Customer with name: "[Test] New Customer With Note" and Status: "prospective"
 	#201 = Created

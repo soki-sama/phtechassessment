@@ -9,6 +9,8 @@ using Propeller.Models;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Propeller.Entities;
+using Propeller.Integration.Tests.Support;
+using NUnit.Framework;
 
 namespace Propeller.Integration.Tests.Drivers
 {
@@ -96,7 +98,19 @@ namespace Propeller.Integration.Tests.Drivers
 
             if (statusC == HttpStatusCode.Created)
             {
-                var createdNote = JsonSerializer.Deserialize<NoteDto>(responseContent);
+                NoteDto? createdNote = JsonSerializer.Deserialize<NoteDto>(responseContent);
+
+                if (createdNote == null)
+                {
+                    Assert.Fail("Invalid Note");
+                }
+
+                // Hookup cleanup
+                _scenarioContext.AddCleanUpStep(async () =>
+                {
+                    await DeleteNote(customerId, createdNote.ID);
+                });
+
                 return (apiResponse, createdNote);
             }
 

@@ -1,5 +1,7 @@
 ﻿@RequiresAdminUser
-#@RequiresRegularUser
+@RequiresPowerUser
+@RequiresRegularUser
+
 Feature: ContactsFeature
 
 A short summary of the feature

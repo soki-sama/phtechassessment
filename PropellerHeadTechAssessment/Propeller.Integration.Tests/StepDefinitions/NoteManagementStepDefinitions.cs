@@ -51,9 +51,8 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I verify the note with text: ""([^""]*)"" exists")]
         public void ThenIVerifyTheNoteWithTextExists(string noteText)
         {
-            CustomerDto existingCustomer = _scenarioContext.Get<CustomerDto>(ContextKeys.CurrentCustomer);
-
-            var note = existingCustomer.Notes.Where(x => x.Text.Equals(noteText)).FirstOrDefault();
+            CustomerDto customer = GetScenarioCurrentCustomer();
+            var note = customer.Notes.Where(x => x.Text.Equals(noteText)).FirstOrDefault();
 
             Assert.IsNotNull(note);
         }
@@ -66,13 +65,13 @@ namespace Propeller.Integration.Tests.StepDefinitions
         [Then(@"I delete the Note with text: ""([^""]*)""")]
         public async Task ThenIDeleteTheNoteWithText(string noteText)
         {
-            var existingCustomer = _scenarioContext.Get<CustomerDto>(ContextKeys.CurrentCustomer);
+            CustomerDto customer = GetScenarioCurrentCustomer();
 
-            var note = existingCustomer.Notes.Where(x => x.Text.Equals(noteText)).FirstOrDefault();
+            var note = customer.Notes.Where(x => x.Text.Equals(noteText)).FirstOrDefault();
 
             Assert.IsNotNull(note);
 
-            var statusCode = await _notesDriver.DeleteNote(existingCustomer.ID, note.ID);
+            var statusCode = await _notesDriver.DeleteNote(customer.ID, note.ID);
 
             Assert.AreEqual(HttpStatusCode.OK, statusCode);
             // throw new PendingStepException();
@@ -125,7 +124,8 @@ namespace Propeller.Integration.Tests.StepDefinitions
             string cid = Obfuscator.ObfuscateId(customerId);
             (ApiResponse ApiResponse, NoteDto? Note) result = await _notesDriver.CreateNewNote(cid, noteText);
 
-            _scenarioContext.Set<HttpStatusCode>(result.ApiResponse.StatusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result.ApiResponse.StatusCode);
+
             _scenarioContext.Set<ApiResponse>(result.ApiResponse, ContextKeys.LastReturnedApiResponse);
 
             // _lastReturnedStatusCode = result.apiResponse.StatusCode;
@@ -144,7 +144,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
             (ApiResponse ApiResponse, NoteDto? Note) result = await AddNote(noteText);
 
             // TODO: Maybe remove this next one and just use the ApiResponse
-            _scenarioContext.Set<HttpStatusCode>(result.ApiResponse.StatusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result.ApiResponse.StatusCode);
             _scenarioContext.Set<ApiResponse>(result.ApiResponse, ContextKeys.LastReturnedApiResponse);
 
             // var latestReturnedApiResponse = _scenarioContext.Get<ApiResponse>(ContextKeys.LastReturnedApiResponse);
@@ -175,7 +175,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
             (ApiResponse ApiResponse, NoteDto? Note) result = await AddNote(longString);
 
             // TODO: Maybe remove this next one and just use the ApiResponse
-            _scenarioContext.Set<HttpStatusCode>(result.ApiResponse.StatusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result.ApiResponse.StatusCode);
             _scenarioContext.Set<ApiResponse>(result.ApiResponse, ContextKeys.LastReturnedApiResponse);
         }
 

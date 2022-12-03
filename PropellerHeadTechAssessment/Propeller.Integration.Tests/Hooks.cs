@@ -34,7 +34,7 @@ namespace Propeller.Integration.Tests
         /// 
         /// </summary>
         [BeforeScenario("RequiresAdminUser")]
-        public async void SetUpAdminUserForScenario()
+        public async Task SetUpAdminUserForScenario()
         {
             Console.Out.WriteLine("-SetUpAdminUserForScenario");
 
@@ -51,14 +51,14 @@ namespace Propeller.Integration.Tests
 
             _featureContext.Set<string>(adminAuthResponse.token, ContextKeys.AdminBearerToken);
 
-
+            Console.Out.WriteLine("-End SetUpAdminUserForScenario");
         }
 
         /// <summary>
         /// 
         /// </summary>
         [BeforeScenario("RequiresPowerUser")]
-        public async void SetUpPowerUserForScenario()
+        public async Task SetUpPowerUserForScenario()
         {
             Console.Out.WriteLine("-SetUpPowerUserForScenario");
 
@@ -74,13 +74,15 @@ namespace Propeller.Integration.Tests
             }
 
             _featureContext.Set<string>(powerAuthResponse.token, ContextKeys.PowerBearerToken);
+
+            Console.Out.WriteLine("-End SetUpPowerUserForScenario");
         }
 
         /// <summary>
         /// 
         /// </summary>
         [BeforeScenario("RequiresRegularUser")]
-        public async void SetUpRegularUserForScenario()
+        public async Task SetUpRegularUserForScenario()
         {
             //something to set up the user
             Console.Out.WriteLine("-SetUpRegularUserForScenario");
@@ -97,6 +99,8 @@ namespace Propeller.Integration.Tests
             }
 
             _featureContext.Set<string>(userAuthResponse.token, ContextKeys.UserBearerToken);
+
+            Console.Out.WriteLine("-End SetUpRegularUserForScenario");
         }
 
         /// <summary>

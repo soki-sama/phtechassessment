@@ -50,15 +50,16 @@ namespace Propeller.Integration.Tests
         public const string NewCustomerId = "NewCustomerId";
         public const string CreatedNoteId = "CreatedNoteId";
 
-        public const string NewContactId = "NewContactId";
+        // public const string NewContactId = "NewContactId";
 
         public const string FoundCustomers = "FoundCustomers";
         public const string FoundContacts = "FoundContacts";
 
-        public const string LastReturnedStatusCode = "LastReturnedStatusCode";
+        public const string LastReturnedStatusCodeX = "LastReturnedStatusCode";
         // public const string LastReturnedResponse = "LastReturnedResponse";
         public const string LastReturnedApiResponse = "LastReturnedApiResponse";
-        public const string CurrentCustomer = "CurrentCustomer";
+        public const string CurrentCustomerX = "CurrentCustomer";
+        public const string CurrentContact = "CurrentContact";
 
         public const string CustomerStatuses = "CustomerStatuses";
 

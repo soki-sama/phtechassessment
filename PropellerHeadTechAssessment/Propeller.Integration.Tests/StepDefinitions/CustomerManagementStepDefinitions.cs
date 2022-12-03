@@ -22,7 +22,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
         // string serverAddress = $"https://localhost:7270";
 
         // private HttpStatusCode _lastStatusCode;
-        private CustomerDto _currentCustomer;
+        //private CustomerDto _currentCustomer;
         // private string _lastCustomerId;
 
         /// <summary>
@@ -76,8 +76,9 @@ namespace Propeller.Integration.Tests.StepDefinitions
 
                 // Save the Id for the newly created Customer
                 //_lastCustomerId = result.Customer.ID;
-                _currentCustomer = result.Customer; // TODO: Should I clean this up and use it like this or inside a context?
-                _scenarioContext.Add(ContextKeys.NewCustomerId, result.Customer.ID);
+                // _currentCustomer = result.Customer; // TODO: Should I clean this up and use it like this or inside a context?
+                _scenarioContext.Set(result.Customer.ID, ContextKeys.NewCustomerId);
+                SetScenarioCurrentCustomer(result.Customer);
             }
 
             //if (_context.(ContextKeys.ReturnedStatusCode))
@@ -85,7 +86,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
 
             //}
 
-            _scenarioContext.Set<HttpStatusCode>(result.ApiResponse.StatusCode, ContextKeys.LastReturnedStatusCode);
+            SetScenarioLatestStatusCode(result.ApiResponse.StatusCode);
             // _lastReturnedStatusCode = result.Response.StatusCode;
             // _context.Add(ContextKeys.ReturnedStatusCode, );
 
@@ -109,8 +110,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
             Assert.AreEqual(HttpStatusCode.OK, result.statusCode);
             Assert.IsNotNull(result.customer);
 
-            _scenarioContext.Set(result.customer, ContextKeys.CurrentCustomer);
-
+            SetScenarioCurrentCustomer(result.customer);
         }
 
         /// <summary>
@@ -181,7 +181,10 @@ namespace Propeller.Integration.Tests.StepDefinitions
 
             // Make sure the record is unique
             result.customers.Count.Should().Be(1);
-            _currentCustomer = result.customers[0];
+
+            CustomerDto customer = result.customers[0];
+
+            SetScenarioCurrentCustomer(customer);
         }
 
         /// <summary>
@@ -223,17 +226,20 @@ namespace Propeller.Integration.Tests.StepDefinitions
         //    string customerId = _scenarioContext.Get<string>(ContextKeys.NewCustomerId);
         //}
 
-        [Then(@"I try to change the Customer Status to: ""([^""]*)""")]
+        [Then(@"I change the Customer Status to: ""([^""]*)""")]
         // [When(@"I try to change the Customer Status to ""([^""]*)""")]
         public async Task ThenITryToChangeTheCustomerStatusTo(string status)
         {
             var statusDto = VerifyCustomerStatus(status);
 
+            // Retrieve current Costumer
+            CustomerDto customer = GetScenarioCurrentCustomer();
+
             HttpStatusCode result = await
-                _customerDriver.ChangeCustomerStatus(_currentCustomer.ID, statusDto.ID);
+                _customerDriver.ChangeCustomerStatus(customer.ID, statusDto.ID);
 
+            SetScenarioLatestStatusCode(result);
             Assert.AreEqual(HttpStatusCode.OK, result);
-
         }
 
         [Then(@"I verify the Customer Status is ""([^""]*)""")]
@@ -241,7 +247,10 @@ namespace Propeller.Integration.Tests.StepDefinitions
         {
             var statusDto = VerifyCustomerStatus(status);
 
-            Assert.AreEqual(statusDto.ID, _currentCustomer.Status);
+            // Retrieve current Costumer
+            CustomerDto customer = GetScenarioCurrentCustomer();
+
+            Assert.AreEqual(statusDto.ID, customer.Status);
             // _currentCustomer
 
         }
@@ -265,7 +274,7 @@ namespace Propeller.Integration.Tests.StepDefinitions
             Assert.AreEqual(HttpStatusCode.OK, result.statusCode);
             Assert.IsNotNull(result.customer);
 
-            _scenarioContext.Set(result.customer, ContextKeys.CurrentCustomer);
+            SetScenarioCurrentCustomer(result.customer);
         }
 
 
@@ -278,7 +287,24 @@ namespace Propeller.Integration.Tests.StepDefinitions
             Console.Out.WriteLine("Here Customer");
         }
 
+        [Then(@"I try to change the Customer Status to and Invalid value")]
+        public async Task ThenITryToChangeTheCustomerStatusToAndInvalidValue()
+        {
+            // Retrieve current Costumer
+            CustomerDto customer = GetScenarioCurrentCustomer();
 
+            Assert.IsNotNull(customer);
+
+            HttpStatusCode result = await _customerDriver.ChangeCustomerStatus(customer.ID, "MTExMTE=");
+
+            SetScenarioLatestStatusCode(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
 
         private CustomerStatusDto VerifyCustomerStatus(string status)
         {
