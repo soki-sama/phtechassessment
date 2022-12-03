@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Propeller.API.Resources;
@@ -30,6 +31,8 @@ namespace Propeller.API.Controllers
         }
 
         [HttpGet]
+        // [Authorize(Policy = "IsAdminUser")]
+        [Authorize(Roles = "Admin,Power", Policy = "IsNZLUser")]
         public async Task<ActionResult<CountryDto>> RetrieveCountries()
         {
             try

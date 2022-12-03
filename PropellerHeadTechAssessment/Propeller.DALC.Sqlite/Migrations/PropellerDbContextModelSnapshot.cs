@@ -86,21 +86,21 @@ namespace Propeller.DALC.Sqlite.Migrations
                     b.HasData(
                         new
                         {
-                            ID = new Guid("2a28502a-abed-4c01-91f7-414f09e94edd"),
+                            ID = new Guid("1d17ef3d-6e70-447b-8146-f402ac5ed29e"),
                             CountryCode = "NZL",
                             DefaultLocale = "en-NZ",
                             Name = "New Zealand"
                         },
                         new
                         {
-                            ID = new Guid("9fb03922-2c31-4e70-9291-96653d599aa5"),
+                            ID = new Guid("5794bce5-9638-4f99-92c1-3ba58b0cb77f"),
                             CountryCode = "MEX",
                             DefaultLocale = "es-MX",
                             Name = "Mexico"
                         },
                         new
                         {
-                            ID = new Guid("a843203b-552f-41c8-b052-9a52f767b681"),
+                            ID = new Guid("34540de9-2a5f-436b-9589-af2b370fde9e"),
                             CountryCode = "FRA",
                             DefaultLocale = "fr-FR",
                             Name = "France"
@@ -197,6 +197,11 @@ namespace Propeller.DALC.Sqlite.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Locale")
                         .IsRequired()
                         .HasMaxLength(5)
@@ -228,6 +233,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                         new
                         {
                             ID = 1,
+                            CountryCode = "NZL",
                             Locale = "en-NZ",
                             Name = "English Administrator",
                             Password = "s3cUrE.p4s5W0Rd.1",
@@ -237,15 +243,27 @@ namespace Propeller.DALC.Sqlite.Migrations
                         new
                         {
                             ID = 2,
+                            CountryCode = "NZL",
+                            Locale = "en-NZ",
+                            Name = "English Power User",
+                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Role = 98,
+                            UserName = "power.en@mail.com"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            CountryCode = "NZL",
                             Locale = "en-NZ",
                             Name = "English User",
-                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Password = "s3cUrE.p4s5W0Rd.3",
                             Role = 1,
                             UserName = "user.en@mail.com"
                         },
                         new
                         {
-                            ID = 3,
+                            ID = 4,
+                            CountryCode = "MEX",
                             Locale = "es-MX",
                             Name = "Administrador México",
                             Password = "s3cUrE.p4s5W0Rd.1",
@@ -254,16 +272,28 @@ namespace Propeller.DALC.Sqlite.Migrations
                         },
                         new
                         {
-                            ID = 4,
+                            ID = 5,
+                            CountryCode = "MEX",
+                            Locale = "es-MX",
+                            Name = "Usuario Poder México",
+                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Role = 98,
+                            UserName = "power.es@mail.com"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            CountryCode = "MEX",
                             Locale = "es-MX",
                             Name = "Usuario México",
-                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Password = "s3cUrE.p4s5W0Rd.3",
                             Role = 1,
                             UserName = "user.es@mail.com"
                         },
                         new
                         {
-                            ID = 5,
+                            ID = 7,
+                            CountryCode = "FRA",
                             Locale = "fr-FR",
                             Name = "French Administrateur",
                             Password = "s3cUrE.p4s5W0Rd.1",
@@ -272,10 +302,21 @@ namespace Propeller.DALC.Sqlite.Migrations
                         },
                         new
                         {
-                            ID = 6,
+                            ID = 8,
+                            CountryCode = "FRA",
+                            Locale = "fr-FR",
+                            Name = "French Power Utilisateur",
+                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Role = 98,
+                            UserName = "power.fr@mail.com"
+                        },
+                        new
+                        {
+                            ID = 9,
+                            CountryCode = "FRA",
                             Locale = "fr-FR",
                             Name = "French Utilisateur",
-                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Password = "s3cUrE.p4s5W0Rd.3",
                             Role = 1,
                             UserName = "user.fr@mail.com"
                         });

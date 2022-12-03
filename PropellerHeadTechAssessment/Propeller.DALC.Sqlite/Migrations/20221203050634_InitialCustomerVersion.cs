@@ -66,7 +66,8 @@ namespace Propeller.DALC.Sqlite.Migrations
                     Password = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Role = table.Column<int>(type: "INTEGER", nullable: false),
-                    Locale = table.Column<string>(type: "TEXT", maxLength: 5, nullable: false)
+                    Locale = table.Column<string>(type: "TEXT", maxLength: 5, nullable: false),
+                    CountryCode = table.Column<string>(type: "TEXT", maxLength: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,9 +146,9 @@ namespace Propeller.DALC.Sqlite.Migrations
                 columns: new[] { "ID", "CountryCode", "DefaultLocale", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("2a28502a-abed-4c01-91f7-414f09e94edd"), "NZL", "en-NZ", "New Zealand" },
-                    { new Guid("9fb03922-2c31-4e70-9291-96653d599aa5"), "MEX", "es-MX", "Mexico" },
-                    { new Guid("a843203b-552f-41c8-b052-9a52f767b681"), "FRA", "fr-FR", "France" }
+                    { new Guid("1d17ef3d-6e70-447b-8146-f402ac5ed29e"), "NZL", "en-NZ", "New Zealand" },
+                    { new Guid("34540de9-2a5f-436b-9589-af2b370fde9e"), "FRA", "fr-FR", "France" },
+                    { new Guid("5794bce5-9638-4f99-92c1-3ba58b0cb77f"), "MEX", "es-MX", "Mexico" }
                 });
 
             migrationBuilder.InsertData(
@@ -162,15 +163,18 @@ namespace Propeller.DALC.Sqlite.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Locale", "Name", "Password", "Role", "UserName" },
+                columns: new[] { "ID", "CountryCode", "Locale", "Name", "Password", "Role", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "en-NZ", "English Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin.en@mail.com" },
-                    { 2, "en-NZ", "English User", "s3cUrE.p4s5W0Rd.2", 1, "user.en@mail.com" },
-                    { 3, "es-MX", "Administrador México", "s3cUrE.p4s5W0Rd.1", 99, "admin.es@mail.com" },
-                    { 4, "es-MX", "Usuario México", "s3cUrE.p4s5W0Rd.2", 1, "user.es@mail.com" },
-                    { 5, "fr-FR", "French Administrateur", "s3cUrE.p4s5W0Rd.1", 99, "admin.fr@mail.com" },
-                    { 6, "fr-FR", "French Utilisateur", "s3cUrE.p4s5W0Rd.2", 1, "user.fr@mail.com" }
+                    { 1, "NZL", "en-NZ", "English Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin.en@mail.com" },
+                    { 2, "NZL", "en-NZ", "English Power User", "s3cUrE.p4s5W0Rd.2", 98, "power.en@mail.com" },
+                    { 3, "NZL", "en-NZ", "English User", "s3cUrE.p4s5W0Rd.3", 1, "user.en@mail.com" },
+                    { 4, "MEX", "es-MX", "Administrador México", "s3cUrE.p4s5W0Rd.1", 99, "admin.es@mail.com" },
+                    { 5, "MEX", "es-MX", "Usuario Poder México", "s3cUrE.p4s5W0Rd.2", 98, "power.es@mail.com" },
+                    { 6, "MEX", "es-MX", "Usuario México", "s3cUrE.p4s5W0Rd.3", 1, "user.es@mail.com" },
+                    { 7, "FRA", "fr-FR", "French Administrateur", "s3cUrE.p4s5W0Rd.1", 99, "admin.fr@mail.com" },
+                    { 8, "FRA", "fr-FR", "French Power Utilisateur", "s3cUrE.p4s5W0Rd.2", 98, "power.fr@mail.com" },
+                    { 9, "FRA", "fr-FR", "French Utilisateur", "s3cUrE.p4s5W0Rd.3", 1, "user.fr@mail.com" }
                 });
 
             migrationBuilder.CreateIndex(

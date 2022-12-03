@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using Propeller.DALC.Interfaces;
 using Propeller.DALC.Repositories;
+using Propeller.Entities;
 using Propeller.Models;
 using Propeller.Models.Requests;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -44,8 +47,6 @@ namespace Propeller.API.Controllers
 
             try
             {
-
-
                 (bool Authorized, PropellerUser? User) result = await ValidateCreds(request.UserId, request.Password);
 
                 if (!result.Authorized)
@@ -69,12 +70,27 @@ namespace Propeller.API.Controllers
                 var secKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret));
                 var signCreds = new SigningCredentials(secKey, SecurityAlgorithms.HmacSha256);
 
+
+                UserProfile up;
+
+                if (!Enum.TryParse<UserProfile>(result.User.Role.ToString(), out up))
+                {
+                    up = UserProfile.Regular;
+                }
+
                 var claims = new List<Claim>
                 {
                     new Claim(Constants.NameClaim, result.User.Name),
-                    new Claim(Constants.ProfileClaim, result.User.Role.ToString()),
-                    new Claim(Constants.LocaleClaim, result.User.Locale)
+                    new Claim(ClaimTypes.Role,up.ToString()),
+                    new Claim(Constants.LocaleClaim, result.User.Locale),
+                    new Claim(ClaimTypes.Country, result.User.CountryCode)
                 };
+
+                // Add roles as multiple claims
+                //foreach (var role in user.Roles)
+                //{
+                //}
+                // claims.Add(new Claim(ClaimTypes.Role, ""));
 
                 var jwt = new JwtSecurityToken(
                     _configuration["Authentication:Issuer"],

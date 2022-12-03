@@ -29,5 +29,8 @@ namespace Propeller.Entities
         [Required, MaxLength(5), MinLength(5)]
         public string Locale { get; set; } = string.Empty;
 
+        [Required, MaxLength(3), MinLength(3)]
+        public string CountryCode { get; set; } = string.Empty;
+
     }
 }

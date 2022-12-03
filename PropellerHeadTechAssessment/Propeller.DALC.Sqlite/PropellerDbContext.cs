@@ -42,12 +42,15 @@ namespace Propeller.DALC.Sqlite
                 );
 
             modelBuilder.Entity<User>().HasData(
-                new User { ID = 1, UserName = "admin.en@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "English Administrator", Role = 99, Locale = "en-NZ" },
-                new User { ID = 2, UserName = "user.en@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "English User", Role = 1, Locale = "en-NZ" },
-                new User { ID = 3, UserName = "admin.es@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "Administrador México", Role = 99, Locale = "es-MX" },
-                new User { ID = 4, UserName = "user.es@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "Usuario México", Role = 1, Locale = "es-MX" },
-                new User { ID = 5, UserName = "admin.fr@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "French Administrateur", Role = 99, Locale = "fr-FR" },
-                new User { ID = 6, UserName = "user.fr@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "French Utilisateur", Role = 1, Locale = "fr-FR" }
+                new User { ID = 1, UserName = "admin.en@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "English Administrator", CountryCode = "NZL", Role = 99, Locale = "en-NZ" },
+                new User { ID = 2, UserName = "power.en@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "English Power User", CountryCode = "NZL", Role = 98, Locale = "en-NZ" },
+                new User { ID = 3, UserName = "user.en@mail.com", Password = "s3cUrE.p4s5W0Rd.3", Name = "English User", CountryCode = "NZL", Role = 1, Locale = "en-NZ" },
+                new User { ID = 4, UserName = "admin.es@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "Administrador México", CountryCode="MEX", Role = 99, Locale = "es-MX" },
+                new User { ID = 5, UserName = "power.es@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "Usuario Poder México", CountryCode = "MEX", Role = 98, Locale = "es-MX" },
+                new User { ID = 6, UserName = "user.es@mail.com", Password = "s3cUrE.p4s5W0Rd.3", Name = "Usuario México", CountryCode = "MEX", Role = 1, Locale = "es-MX" },
+                new User { ID = 7, UserName = "admin.fr@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "French Administrateur", CountryCode = "FRA", Role = 99, Locale = "fr-FR" },
+                new User { ID = 8, UserName = "power.fr@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "French Power Utilisateur", CountryCode = "FRA", Role = 98, Locale = "fr-FR" },
+                new User { ID = 9, UserName = "user.fr@mail.com", Password = "s3cUrE.p4s5W0Rd.3", Name = "French Utilisateur", CountryCode = "FRA", Role = 1, Locale = "fr-FR" }
                 );
 
             modelBuilder.Entity<Country>().HasData(

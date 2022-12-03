@@ -11,6 +11,7 @@ using System.Text;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
 using Propeller.API.Providers;
+using System.Security.Claims;
 // using Propeller.Entities.DbContexts;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -96,6 +97,16 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:Secret"]))
         }
     );
+
+// Add ABAC
+builder.Services.AddAuthorization(ops =>
+{
+    ops.AddPolicy("IsNZLUser", pol =>
+        {
+            pol.RequireAuthenticatedUser();
+            pol.RequireClaim(ClaimTypes.Country, "NZL");
+        });
+});
 
 var app = builder.Build();
 
