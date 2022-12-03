@@ -30,5 +30,12 @@ Alternative:
 3.- Press F5
 4.- Be amazed :)
 
+## API Documentation
+
+A basic documentation for the API endpoints and it's usage can be found at the following address (when run locally):
+
+https://localhost:port/swagger/index.html
+
+You will need to set port number to whatever port your application is running in
 .
 x
