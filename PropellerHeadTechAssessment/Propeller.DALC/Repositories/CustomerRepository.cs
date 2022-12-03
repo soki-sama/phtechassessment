@@ -88,7 +88,8 @@ namespace Propeller.DALC.Repositories
         /// <param name="pageSize"></param>
         /// <returns></returns>
         public async Task<(IEnumerable<Customer> customers, PaginationMeta pagination)>
-            RetrieveCustomersAsync(string? query, int pageNumber, int pageSize)
+            RetrieveCustomersAsync(string? query, string? sortField, string? sortDirection,
+                int pageNumber, int pageSize)
         {
 
             //if (string.IsNullOrEmpty(filter) &&
@@ -111,6 +112,11 @@ namespace Propeller.DALC.Repositories
                 tempColl = tempColl.Where(x => x.Name.ToUpper().Contains(query.ToUpper()));
             }
 
+            string sortingField = "Name"; // Default
+
+            var propertyInfo = typeof(Customer).GetProperty(sortingField);
+            tempColl = ConfigureSorting(sortField, sortDirection, tempColl);
+
             int totalRecords = await tempColl.CountAsync();
 
             var paginationMeta = new PaginationMeta(totalRecords, pageSize, pageNumber);
@@ -122,6 +128,37 @@ namespace Propeller.DALC.Repositories
                 .ToListAsync();
 
             return (records, paginationMeta);
+        }
+
+        private static IQueryable<Customer> ConfigureSorting(string sortField, string? sortDirection, IQueryable<Customer> tempColl)
+        {
+            if (!string.IsNullOrEmpty(sortDirection)) // Sort
+            {
+                if (sortDirection == "a")
+                {
+                    if (sortField == "n")
+                    {
+                        tempColl = tempColl.OrderBy(x => x.Name);
+                    }
+                    else
+                    {
+                        tempColl = tempColl.OrderBy(x => x.LastModified);
+                    }
+                }
+                else
+                {
+                    if (sortField == "n")
+                    {
+                        tempColl = tempColl.OrderByDescending(x => x.Name);
+                    }
+                    else
+                    {
+                        tempColl = tempColl.OrderByDescending(x => x.LastModified);
+                    }
+                }
+            }
+
+            return tempColl;
         }
 
         /// <summary>

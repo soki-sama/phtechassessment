@@ -56,7 +56,9 @@ namespace Propeller.API.Controllers
             RetrieveCustomers(
                 [FromQuery(Name = "q")] string? criteria,
                 [FromQuery(Name = "pn")] int pageNumber = 1,
-                [FromQuery(Name = "ps")] int pageSize = 25
+                [FromQuery(Name = "ps")] int pageSize = 25,
+                [FromQuery(Name = "s")] string? sortField = "",
+                [FromQuery(Name = "d")] string? sortDirection = ""
             )
         {
 
@@ -73,7 +75,8 @@ namespace Propeller.API.Controllers
 
                 // IEnumerable<Customer> customers = new List<Customer>();
 
-                var (customers, paginationMeta) = await _customerRepo.RetrieveCustomersAsync(criteria, pageNumber, pageSize);
+                var (customers, paginationMeta) = await 
+                    _customerRepo.RetrieveCustomersAsync(criteria, sortField, sortDirection, pageNumber, pageSize);
 
 
                 Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMeta));

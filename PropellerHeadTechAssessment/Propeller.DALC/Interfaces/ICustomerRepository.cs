@@ -13,7 +13,8 @@ namespace Propeller.DALC.Interfaces
 
         // Task<IEnumerable<Customer>> RetrieveCustomersAsync();
 
-        Task<(IEnumerable<Customer> customers, PaginationMeta pagination)> RetrieveCustomersAsync(string? query, int pageNumber, int pageSize);
+        Task<(IEnumerable<Customer> customers, PaginationMeta pagination)> 
+            RetrieveCustomersAsync(string? query, string? sortField, string? sortDirection, int pageNumber, int pageSize);
 
         // Marked Customer as nullable to allow the returned object to be
         // evaluated at the upper most level so theAPI can report back
