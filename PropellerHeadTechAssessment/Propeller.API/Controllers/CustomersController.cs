@@ -172,6 +172,7 @@ namespace Propeller.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult<CustomerDto>> UpdateCustomer(string id, UpdateCustomerRequest request)
         {
             int customerId = -1;
@@ -212,6 +213,7 @@ namespace Propeller.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult<CustomerDto>> CreateCustomer(CreateCustomerRequest request)
         {
             // TODO: Add proper validation
@@ -264,6 +266,7 @@ namespace Propeller.API.Controllers
         /// <param name="requestPatch"></param>
         /// <returns></returns>
         [HttpPatch("{id}")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult> PartialUpdateCustomer(int id,
             JsonPatchDocument<UpdateCustomerRequest> requestPatch)
         {
@@ -301,9 +304,10 @@ namespace Propeller.API.Controllers
         /// <param name="cid"></param>
         /// <param name="sid"></param>
         /// <returns></returns>
-        [HttpPut("{cid}/status")]
+        [HttpPut("{cid}/status/{sid}")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult> ChangeCustomerStatus(string cid,
-            [FromBody] string sid)
+            [FromRoute] string sid)
         {
 
             try
@@ -327,7 +331,7 @@ namespace Propeller.API.Controllers
                 // Verify valid Status Id
                 if (!await _customerStatusRepository.ValidateStatusExists(statusId))
                 {
-                    return NotFound(); // TODO: Pick a proper error code for this
+                    return BadRequest(); // TODO: Pick a proper error code for this
                 }
 
                 existingCustomer.CustomerStatusID = statusId;
@@ -355,6 +359,7 @@ namespace Propeller.API.Controllers
         /// <param name="forceDelete"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteCustomer(string id,
             [FromQuery(Name = "fd")] string? forceDelete = "n")
         {

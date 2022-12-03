@@ -74,6 +74,7 @@ namespace Propeller.API.Controllers
         /// <param name="cid"></param>
         /// <returns></returns>
         [HttpGet("{cid}/{noteId}", Name = "GetNote")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult<NoteDto>> RetrieveCustomerNote(string cid, int noteId)
         {
             try
@@ -112,6 +113,7 @@ namespace Propeller.API.Controllers
         /// <param name="noteText"></param>
         /// <returns></returns>
         [HttpPost("{cid}")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult<NoteDto>> AddCustomerNote(string cid,
             [FromForm] string? noteText)
         {
@@ -119,12 +121,6 @@ namespace Propeller.API.Controllers
 
             try
             {
-
-                if (!ValidateAdmin())
-                {
-                    return Forbid();
-                }
-
                 if (string.IsNullOrEmpty(noteText))
                 {
                     return UnprocessableEntity("Note Text Required"); // TODO: Is this the best error code to return?
@@ -183,19 +179,15 @@ namespace Propeller.API.Controllers
         /// <param name="noteText"></param>
         /// <returns></returns>
         [HttpPut("{cid}/{noteId}")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult> UpdateCustomerNote(string cid,
-            int noteId, 
+            int noteId,
             [FromForm] string noteText)
         {
             int customerId = -1;
 
             try
             {
-                if (!ValidateAdmin())
-                {
-                    return Forbid();
-                }
-
                 customerId = cid.Deobfuscate();
 
                 if (customerId == -1)
@@ -232,17 +224,13 @@ namespace Propeller.API.Controllers
         /// <param name="noteId"></param>
         /// <returns></returns>
         [HttpDelete("{cid}/{noteId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteCustomerNote(string cid, int noteId)
         {
             int customerId = -1;
 
             try
             {
-                if (!ValidateAdmin())
-                {
-                    return Forbid();
-                }
-
                 customerId = Obfuscator.DeobfuscateId(cid);
 
                 if (customerId == -1)

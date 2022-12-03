@@ -11,37 +11,13 @@ namespace Propeller.Shared
 
         public static string Obfuscate(this int value)
         {
-            // TODO: Add err handling for mapper
-            try
-            {
-                return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
+            return Obfuscator.ObfuscateId(value);
         }
 
 
         public static int Deobfuscate(this string value)
         {
-            try
-            {
-                var v = Encoding.UTF8.GetString(Convert.FromBase64String(value));
-
-                if (!int.TryParse(v, out int result))
-                {
-                    throw new Exception("INvalid Value"); // TODO: Add proper exception here
-                }
-
-                return result;
-
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-
+            return Obfuscator.DeobfuscateId(value);
         }
 
     }

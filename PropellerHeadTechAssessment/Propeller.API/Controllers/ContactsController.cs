@@ -49,11 +49,11 @@ namespace Propeller.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult> CreateContact(CreateContactRequest request)
         {
             try
             {
-
                 Contact newContact = _mapper.Map<Contact>(request);
 
                 if (string.IsNullOrEmpty(newContact.EMail.Trim()) && 
@@ -164,6 +164,7 @@ namespace Propeller.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Admin,Power")]
         public async Task<ActionResult<bool>> UpdateContact(int id, UpdateContactRequest request)
         {
             try
@@ -248,6 +249,7 @@ namespace Propeller.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteContact(
             [FromRoute(Name = "id")] int contactId,
             [FromQuery(Name = "fd")] string? forceDelete = "n")

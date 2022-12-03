@@ -4,43 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Propeller.Shared
+namespace Propeller.Integration.Tests.Support
 {
     public static class Obfuscator
     {
-        /// <summary>
-        /// Obfuscate will always be used for ID's, an empty string is safe to be used since it'll never happen
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         public static string ObfuscateId(int value)
         {
-            // TODO: Add err handling for mapper
-            try
-            {
-                return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
-
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
         }
 
         /// <summary>
-        /// Deobfuscation is used for ID's, so a -1 value will never be valid, safe to use
+        /// Returns a deobfuscated Id, will return -1 in case of any error
+        /// Ids will never be negative numbers
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static int DeobfuscateId(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                return -1;
+
             try
             {
                 var v = Encoding.UTF8.GetString(Convert.FromBase64String(value));
 
                 if (!int.TryParse(v, out int result))
                 {
-                    throw new Exception("INvalid Value"); // TODO: Add proper exception here
+                    return -1;
+                    // throw new Exception("INvalid Value"); // TODO: Add proper exception here
                 }
 
                 return result;
@@ -50,7 +41,10 @@ namespace Propeller.Shared
             {
                 return -1;
             }
+
+
         }
 
     }
+
 }
