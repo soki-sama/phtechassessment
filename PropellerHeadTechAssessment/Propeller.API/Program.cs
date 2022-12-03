@@ -8,6 +8,8 @@ using NLog.Web;
 using NLog;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
 // using Propeller.Entities.DbContexts;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -43,6 +45,7 @@ builder.Services.AddScoped<INotesRepository, NotesRepository>();
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
 builder.Services.AddScoped<ICustomerStatusRepository, CustomerStatusRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 
 // Inject Automapper
 // builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
@@ -50,6 +53,23 @@ builder.Services.AddAutoMapper(typeof(Propeller.Mappers.CustomerProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.NoteProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.ContactProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.UserProfile));
+
+// Localization
+builder.Services.AddLocalization();
+
+// TODO: Whats the dif? LocalizationOptions locOptions = new RequestLocalizationOptions();
+RequestLocalizationOptions locOptions = new RequestLocalizationOptions();
+
+var supportedCultures = new[]
+{
+    new CultureInfo("en-NZ"),
+    new CultureInfo("es-MX"),
+    new CultureInfo("fr-FR")
+};
+
+locOptions.SupportedCultures = supportedCultures;
+locOptions.SetDefaultCulture("en-NZ");
+locOptions.ApplyCurrentCultureToResponseHeaders = true;
 
 // Attach Auth
 builder.Services.AddAuthentication("Bearer")
@@ -66,6 +86,8 @@ builder.Services.AddAuthentication("Bearer")
     );
 
 var app = builder.Build();
+
+app.UseRequestLocalization(locOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

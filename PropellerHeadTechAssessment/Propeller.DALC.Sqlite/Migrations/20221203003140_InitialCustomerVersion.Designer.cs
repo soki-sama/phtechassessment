@@ -11,7 +11,7 @@ using Propeller.DALC.Sqlite;
 namespace Propeller.DALC.Sqlite.Migrations
 {
     [DbContext(typeof(PropellerDbContext))]
-    [Migration("20221202231123_InitialCustomerVersion")]
+    [Migration("20221203003140_InitialCustomerVersion")]
     partial class InitialCustomerVersion
     {
         /// <inheritdoc />
@@ -62,6 +62,52 @@ namespace Propeller.DALC.Sqlite.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("Propeller.Entities.Country", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DefaultLocale")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Countries");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = new Guid("31271128-22b3-47ab-a0e7-5be07af66864"),
+                            CountryCode = "NZL",
+                            DefaultLocale = "en-NZ",
+                            Name = "New Zealand"
+                        },
+                        new
+                        {
+                            ID = new Guid("814da6ab-5e2a-4bc2-9409-41b58c098c29"),
+                            CountryCode = "MEX",
+                            DefaultLocale = "es-MX",
+                            Name = "Mexico"
+                        },
+                        new
+                        {
+                            ID = new Guid("77f06f39-8695-49e5-8c08-1b344aee4016"),
+                            CountryCode = "FRA",
+                            DefaultLocale = "fr-FR",
+                            Name = "France"
+                        });
                 });
 
             modelBuilder.Entity("Propeller.Entities.Customer", b =>
@@ -154,6 +200,11 @@ namespace Propeller.DALC.Sqlite.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Locale")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -180,6 +231,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                         new
                         {
                             ID = 1,
+                            Locale = "en-NZ",
                             Name = "Administrator",
                             Password = "s3cUrE.p4s5W0Rd.1",
                             Role = 99,
@@ -188,6 +240,7 @@ namespace Propeller.DALC.Sqlite.Migrations
                         new
                         {
                             ID = 2,
+                            Locale = "es-MX",
                             Name = "Regular User",
                             Password = "s3cUrE.p4s5W0Rd.2",
                             Role = 1,

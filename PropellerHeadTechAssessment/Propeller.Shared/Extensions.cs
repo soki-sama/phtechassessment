@@ -8,16 +8,23 @@ namespace Propeller.Shared
 {
     public static class Extensions
     {
+
         public static string Obfuscate(this int value)
         {
             // TODO: Add err handling for mapper
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
+            try
+            {
+                return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
+
 
         public static int Deobfuscate(this string value)
         {
-            // TODO: Add proper error handling
-
             try
             {
                 var v = Encoding.UTF8.GetString(Convert.FromBase64String(value));
@@ -32,8 +39,7 @@ namespace Propeller.Shared
             }
             catch (Exception ex)
             {
-
-                throw;
+                return -1;
             }
 
         }

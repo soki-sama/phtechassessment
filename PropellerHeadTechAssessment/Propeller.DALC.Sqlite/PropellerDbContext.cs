@@ -24,6 +24,7 @@ namespace Propeller.DALC.Sqlite
 
         public DbSet<User> Users { get; set; } = null!;
 
+        public DbSet<Country> Countries { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,8 +42,14 @@ namespace Propeller.DALC.Sqlite
                 );
 
             modelBuilder.Entity<User>().HasData(
-                new User { ID = 1, UserName = "admin@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "Administrator", Role = 99 },
-                new User { ID = 2, UserName = "user@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "Regular User", Role = 1 }
+                new User { ID = 1, UserName = "admin@mail.com", Password = "s3cUrE.p4s5W0Rd.1", Name = "Administrator", Role = 99, Locale = "en-NZ" },
+                new User { ID = 2, UserName = "user@mail.com", Password = "s3cUrE.p4s5W0Rd.2", Name = "Regular User", Role = 1, Locale = "es-MX" }
+                );
+
+            modelBuilder.Entity<Country>().HasData(
+                new Country { ID = Guid.NewGuid(), Name = "New Zealand", CountryCode = "NZL", DefaultLocale = "en-NZ" },
+                new Country { ID = Guid.NewGuid(), Name = "Mexico", CountryCode = "MEX", DefaultLocale = "es-MX" },
+                new Country { ID = Guid.NewGuid(), Name = "France", CountryCode = "FRA", DefaultLocale = "fr-FR" }
                 );
 
             // Seed customers for testing filters and pagination

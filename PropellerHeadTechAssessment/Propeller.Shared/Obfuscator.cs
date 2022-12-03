@@ -8,41 +8,24 @@ namespace Propeller.Shared
 {
     public static class Obfuscator
     {
+        /// <summary>
+        /// Obfuscate will always be used for ID's, an empty string is safe to be used since it'll never happen
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string ObfuscateId(int value)
         {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value.ToString()));
+            return Obfuscator.ObfuscateId(value);
         }
 
         /// <summary>
-        /// Returns a deobfuscated Id, will return -1 in case of any error
-        /// Ids will never be negative numbers
+        /// Deobfuscation is used for ID's, so a -1 value will never be valid, safe to use
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static int DeobfuscateId(string value)
         {
-            if (string.IsNullOrEmpty(value))
-                return -1;
-
-            try
-            {
-                var v = Encoding.UTF8.GetString(Convert.FromBase64String(value));
-
-                if (!int.TryParse(v, out int result))
-                {
-                    return -1;
-                    // throw new Exception("INvalid Value"); // TODO: Add proper exception here
-                }
-
-                return result;
-
-            }
-            catch (Exception ex)
-            {
-                return -1;
-            }
-
-
+            return Obfuscator.DeobfuscateId(value);
         }
 
     }

@@ -15,7 +15,7 @@ namespace Propeller.DALC.Repositories
 {
     public class ContactsRepository : IContactsRepository
     {
-        private PropellerDbContext _customerDbContext;
+        private readonly PropellerDbContext _customerDbContext;
 
         public ContactsRepository(PropellerDbContext customerDbContext)
         {
@@ -45,7 +45,8 @@ namespace Propeller.DALC.Repositories
         public async Task<List<Contact>> RetrieveContactsByCustomerId(int customerId)
         {
             // TODO: Optimize this query?
-            return await _customerDbContext.Contacts.Where(x => x.Customers.Where(x => x.ID == customerId).Count() > 0).ToListAsync();
+            return await _customerDbContext.Contacts
+                .Where(x => x.Customers.Where(x => x.ID == customerId).Any()).ToListAsync();
         }
 
         /// <summary>
@@ -65,13 +66,6 @@ namespace Propeller.DALC.Repositories
             //    filter = filter.Trim();
             //    tempColl = tempColl.Where(x => x.Name.Equals(filter));
             //}
-
-
-
-            if (string.IsNullOrEmpty(searchField))
-            {
-
-            }
 
             // If no search criteria is specified, we retrieve everything
 
@@ -108,7 +102,6 @@ namespace Propeller.DALC.Repositories
             }
 
             int totalRecords = await tempColl.CountAsync();
-
             var paginationMeta = new PaginationMeta(totalRecords, pageSize, pageNumber);
 
             // TODO: Add sorting

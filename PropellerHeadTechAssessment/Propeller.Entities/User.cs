@@ -26,5 +26,8 @@ namespace Propeller.Entities
         [Required]
         public int Role { get; set; }
 
+        [Required, MaxLength(5), MinLength(5)]
+        public string Locale { get; set; } = string.Empty;
+
     }
 }

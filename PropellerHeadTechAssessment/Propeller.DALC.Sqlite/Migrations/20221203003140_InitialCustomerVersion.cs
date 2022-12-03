@@ -30,6 +30,20 @@ namespace Propeller.DALC.Sqlite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    CountryCode = table.Column<string>(type: "TEXT", nullable: false),
+                    DefaultLocale = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomerStatuses",
                 columns: table => new
                 {
@@ -51,7 +65,8 @@ namespace Propeller.DALC.Sqlite.Migrations
                     UserName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Role = table.Column<int>(type: "INTEGER", nullable: false)
+                    Role = table.Column<int>(type: "INTEGER", nullable: false),
+                    Locale = table.Column<string>(type: "TEXT", maxLength: 5, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,6 +141,16 @@ namespace Propeller.DALC.Sqlite.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "ID", "CountryCode", "DefaultLocale", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("31271128-22b3-47ab-a0e7-5be07af66864"), "NZL", "en-NZ", "New Zealand" },
+                    { new Guid("77f06f39-8695-49e5-8c08-1b344aee4016"), "FRA", "fr-FR", "France" },
+                    { new Guid("814da6ab-5e2a-4bc2-9409-41b58c098c29"), "MEX", "es-MX", "Mexico" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "CustomerStatuses",
                 columns: new[] { "ID", "State" },
                 values: new object[,]
@@ -137,11 +162,11 @@ namespace Propeller.DALC.Sqlite.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Name", "Password", "Role", "UserName" },
+                columns: new[] { "ID", "Locale", "Name", "Password", "Role", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin@mail.com" },
-                    { 2, "Regular User", "s3cUrE.p4s5W0Rd.2", 1, "user@mail.com" }
+                    { 1, "en-NZ", "Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin@mail.com" },
+                    { 2, "es-MX", "Regular User", "s3cUrE.p4s5W0Rd.2", 1, "user@mail.com" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -165,6 +190,9 @@ namespace Propeller.DALC.Sqlite.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ContactCustomer");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "Notes");

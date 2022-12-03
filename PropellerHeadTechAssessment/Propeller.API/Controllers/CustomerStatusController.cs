@@ -16,13 +16,13 @@ namespace Propeller.API.Controllers
     public class CustomerStatusController : PropellerControllerBase
     {
         private ICustomerStatusRepository _customerStatusRepository;
-        private readonly ILogger<CustomersController> _logger;
+        private readonly ILogger<CustomerStatusController> _logger;
         private readonly IMapper _mapper;
 
         public CustomerStatusController(IContactsRepository contactsRepo,
                 ICustomerStatusRepository customerStatusRepository,
                 IMapper mapper,
-                ILogger<CustomersController> logger
+                ILogger<CustomerStatusController> logger
         )
         {
             _customerStatusRepository = customerStatusRepository;
