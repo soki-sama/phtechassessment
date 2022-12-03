@@ -44,12 +44,15 @@ Alternative:
 1.- Open the PropellerHeadTechAssessment.sln file on Visual Studio 2022  
 2.- Verify the Propeller.API is set to run as Startup project  
 3.- Press F5  
+
 4.- Be amazed :)  
 
 ## How to Test  
 In the code base you can find a Folder named "Postman", here you will find sample calls for all endpoints and it's usage. Import the PropellerH.postman_collection file into PostMan. Variables can be used to setup the Auth Tokens across the calls, just remember 3 roles exist, so make sure to use the proper authorization
 
 You can also open the PropellerHeadTechAssessment.Tests.sln solution file on Visual Studio and build. This will generate a set of tests to be run from the Test Explorer. It is suggested you install the SpecFlow extension to debug and inspect the Gherkin code easier.
+
+Make sure you specify the proper path for BASEAPIURL to your local instance on the specflow.json configuration file, 
 
 ## API Documentation
 
@@ -102,6 +105,7 @@ I try to stick as much as possible to Native libraries and custom code whenever 
 - User lost password / recovery email feature
 - Custom Model Binding for Contact setup to validate on binding for Email and/or Phone existance, currently this is performed at implementation level, I wanted to change this to binding level.
 - Refactoring: Most code adheres to the Single Responsibility principle, so code duplication should be minimal, still I think some code can be moved over to Base classes and shared across derived classes.
+- More Integration Tests
 
 ## Things I wish I would have done different
 - AutoMapper, I wanted to give this library a try since I had it recommended by a colleage, I got to say I'm not quite convinced, it seems it's prone to errors and I belive it might have some security issues. Setting it up seemed a bit complicated for complex types and debugging mapping errors is quite hard. For a small application like this one it might not be the best idea
@@ -113,3 +117,5 @@ I had to refresh my knowledge of Entity Frameworks because for the last 4 years 
 
 ## Final Words to the Reviewer  
 Please reach out to me if you need any further info regarding the solution, It was really fun to work on this project and I appreciate you dedicating time to review it, if you have any input on what could be performed better please feel free to leave comments on the code or the repo I'd love to get feedback on this. I hope you have as much fun reviewing this as I had coding it, have a good one and Thank you!
+
+![image](https://user-images.githubusercontent.com/119035054/205457742-4efbdf7f-94d2-47b9-917b-e2e440efcaa2.png)
