@@ -145,9 +145,9 @@ namespace Propeller.DALC.Sqlite.Migrations
                 columns: new[] { "ID", "CountryCode", "DefaultLocale", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("31271128-22b3-47ab-a0e7-5be07af66864"), "NZL", "en-NZ", "New Zealand" },
-                    { new Guid("77f06f39-8695-49e5-8c08-1b344aee4016"), "FRA", "fr-FR", "France" },
-                    { new Guid("814da6ab-5e2a-4bc2-9409-41b58c098c29"), "MEX", "es-MX", "Mexico" }
+                    { new Guid("2a28502a-abed-4c01-91f7-414f09e94edd"), "NZL", "en-NZ", "New Zealand" },
+                    { new Guid("9fb03922-2c31-4e70-9291-96653d599aa5"), "MEX", "es-MX", "Mexico" },
+                    { new Guid("a843203b-552f-41c8-b052-9a52f767b681"), "FRA", "fr-FR", "France" }
                 });
 
             migrationBuilder.InsertData(
@@ -165,8 +165,12 @@ namespace Propeller.DALC.Sqlite.Migrations
                 columns: new[] { "ID", "Locale", "Name", "Password", "Role", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "en-NZ", "Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin@mail.com" },
-                    { 2, "es-MX", "Regular User", "s3cUrE.p4s5W0Rd.2", 1, "user@mail.com" }
+                    { 1, "en-NZ", "English Administrator", "s3cUrE.p4s5W0Rd.1", 99, "admin.en@mail.com" },
+                    { 2, "en-NZ", "English User", "s3cUrE.p4s5W0Rd.2", 1, "user.en@mail.com" },
+                    { 3, "es-MX", "Administrador México", "s3cUrE.p4s5W0Rd.1", 99, "admin.es@mail.com" },
+                    { 4, "es-MX", "Usuario México", "s3cUrE.p4s5W0Rd.2", 1, "user.es@mail.com" },
+                    { 5, "fr-FR", "French Administrateur", "s3cUrE.p4s5W0Rd.1", 99, "admin.fr@mail.com" },
+                    { 6, "fr-FR", "French Utilisateur", "s3cUrE.p4s5W0Rd.2", 1, "user.fr@mail.com" }
                 });
 
             migrationBuilder.CreateIndex(

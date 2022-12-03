@@ -86,21 +86,21 @@ namespace Propeller.DALC.Sqlite.Migrations
                     b.HasData(
                         new
                         {
-                            ID = new Guid("31271128-22b3-47ab-a0e7-5be07af66864"),
+                            ID = new Guid("2a28502a-abed-4c01-91f7-414f09e94edd"),
                             CountryCode = "NZL",
                             DefaultLocale = "en-NZ",
                             Name = "New Zealand"
                         },
                         new
                         {
-                            ID = new Guid("814da6ab-5e2a-4bc2-9409-41b58c098c29"),
+                            ID = new Guid("9fb03922-2c31-4e70-9291-96653d599aa5"),
                             CountryCode = "MEX",
                             DefaultLocale = "es-MX",
                             Name = "Mexico"
                         },
                         new
                         {
-                            ID = new Guid("77f06f39-8695-49e5-8c08-1b344aee4016"),
+                            ID = new Guid("a843203b-552f-41c8-b052-9a52f767b681"),
                             CountryCode = "FRA",
                             DefaultLocale = "fr-FR",
                             Name = "France"
@@ -229,19 +229,55 @@ namespace Propeller.DALC.Sqlite.Migrations
                         {
                             ID = 1,
                             Locale = "en-NZ",
-                            Name = "Administrator",
+                            Name = "English Administrator",
                             Password = "s3cUrE.p4s5W0Rd.1",
                             Role = 99,
-                            UserName = "admin@mail.com"
+                            UserName = "admin.en@mail.com"
                         },
                         new
                         {
                             ID = 2,
-                            Locale = "es-MX",
-                            Name = "Regular User",
+                            Locale = "en-NZ",
+                            Name = "English User",
                             Password = "s3cUrE.p4s5W0Rd.2",
                             Role = 1,
-                            UserName = "user@mail.com"
+                            UserName = "user.en@mail.com"
+                        },
+                        new
+                        {
+                            ID = 3,
+                            Locale = "es-MX",
+                            Name = "Administrador México",
+                            Password = "s3cUrE.p4s5W0Rd.1",
+                            Role = 99,
+                            UserName = "admin.es@mail.com"
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Locale = "es-MX",
+                            Name = "Usuario México",
+                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Role = 1,
+                            UserName = "user.es@mail.com"
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Locale = "fr-FR",
+                            Name = "French Administrateur",
+                            Password = "s3cUrE.p4s5W0Rd.1",
+                            Role = 99,
+                            UserName = "admin.fr@mail.com"
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Locale = "fr-FR",
+                            Name = "French Utilisateur",
+                            Password = "s3cUrE.p4s5W0Rd.2",
+                            Role = 1,
+                            UserName = "user.fr@mail.com"
                         });
                 });
 

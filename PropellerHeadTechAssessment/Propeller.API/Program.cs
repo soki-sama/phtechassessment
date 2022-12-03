@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Globalization;
 using Microsoft.Extensions.Localization;
+using Propeller.API.Providers;
 // using Propeller.Entities.DbContexts;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -55,6 +56,11 @@ builder.Services.AddAutoMapper(typeof(Propeller.Mappers.ContactProfile));
 builder.Services.AddAutoMapper(typeof(Propeller.Mappers.UserProfile));
 
 // Localization
+// NOTE: This is pretty interesting, there seems to be different approaches to how to handle the Resources files
+// I usually created an empty class and added the Resource files under it, but it seems I can also set the
+// resources path here and that works too, even more, I can also fully qualify te empty class
+// ie Namespace.Resources and it'll allow the injector to resolve the path on it's own too (approach taken for this POC)
+// builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddLocalization();
 
 // TODO: Whats the dif? LocalizationOptions locOptions = new RequestLocalizationOptions();
@@ -68,8 +74,14 @@ var supportedCultures = new[]
 };
 
 locOptions.SupportedCultures = supportedCultures;
+locOptions.SupportedUICultures = supportedCultures; // ???
 locOptions.SetDefaultCulture("en-NZ");
 locOptions.ApplyCurrentCultureToResponseHeaders = true;
+
+// Attach custom provider to read locale from Token
+// TODO: Investigate what happens if I clear all providers and try to read locale from header
+locOptions.RequestCultureProviders.Clear();
+locOptions.RequestCultureProviders.Add(new TokenBasedRequestCultureProvider());
 
 // Attach Auth
 builder.Services.AddAuthentication("Bearer")

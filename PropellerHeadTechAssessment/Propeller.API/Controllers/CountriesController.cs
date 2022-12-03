@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Propeller.API.Resources;
 using Propeller.DALC.Interfaces;
 using Propeller.DALC.Repositories;
 using Propeller.Models;
@@ -36,6 +37,8 @@ namespace Propeller.API.Controllers
                 var result = await _countriesRepository.RetrieveCountries();
 
                 List<CountryDto> countries = new List<CountryDto>();
+
+                // _localizer.GetString("", )
 
                 foreach (var item in result)
                 {
