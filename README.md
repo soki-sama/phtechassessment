@@ -13,22 +13,22 @@ __*This service can be deployed at any time*__
 * Propeller.Models - DTO Models
 * Propeller.Shared - Shared Functionality
 
-__*PropellerHeadTechAssessment.sln:*__ Contains the main Application
-__*PropellerHeadTechAssessment.Tests.sln:*__ Contains Integration Tests
+__*PropellerHeadTechAssessment.sln:*__ Contains the main Application  
+__*PropellerHeadTechAssessment.Tests.sln:*__ Contains Integration Tests  
 
 ## How to Run
 
 After cloning the GitHub repository
 
 1.- Open an Administrator Power Shell Console  
-2.- Navigate to the location of the Propeller.API.csproj (Main Application)
-3.- Run the following command: dotnet run
+2.- Navigate to the location of the Propeller.API.csproj (Main Application)  
+3.- Run the following command: dotnet run  
 
-Alternative:
-1.- Open the PropellerHeadTechAssessment.sln file on Visual Studio 2022
-2.- Verify the Propeller.API is set to run as Startup project
-3.- Press F5
-4.- Be amazed :)
+Alternative:  
+1.- Open the PropellerHeadTechAssessment.sln file on Visual Studio 2022  
+2.- Verify the Propeller.API is set to run as Startup project  
+3.- Press F5  
+4.- Be amazed :)  
 
 ## API Documentation
 
