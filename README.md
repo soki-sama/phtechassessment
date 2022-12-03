@@ -1,6 +1,9 @@
 # Soki's PH Tech Assessment
 
-__*This service can be deployed at any time*__
+__*Overview: Technical Assessment for Propellerhead.*__  
+
+Sample application for REST Endpoints that include CRUD operations for Costumers, Contacts, Notes. Also includes retrieve operation for Country Catalog and simple User Authentication. Current implementation should run out of the box with included SQLite DB file at root level on Propeller.API
+
 
 ## Table of Contents
 * [Quickstart](#quickstart)  
@@ -8,6 +11,7 @@ __*This service can be deployed at any time*__
 * [How to Run](#how-to-run)  
 * [How to Test](#how-to-test)  
 * [API Documentation](#api-documentation)
+* [Endpoints](#endpoints)
 * [Features](#features) 
 * [Features I wanted to implement but ran out of time](#features-i-wanted-to-implement-but-ran-out-of-time)
 * [Things I wish I would have done different](#things-i-wish-i-would-have-done-different)
@@ -56,9 +60,7 @@ Make sure you specify the proper path for BASEAPIURL to your local instance on t
 
 If done correctly, your tests will run successfully
 
-<p align="center">
 ![image](https://user-images.githubusercontent.com/119035054/205457742-4efbdf7f-94d2-47b9-917b-e2e440efcaa2.png)
-</p>
 
 ## API Documentation
 
@@ -68,38 +70,74 @@ https://localhost:port/swagger/index.html
 
 You will need to set port number to whatever port your application is running in
 .
+## Endpoints  
+### Authentication
+* [POST] *api/auth/authenticate* : __Authenticates a User__
+
+### Contacts
+* [POST] *api/contacts* : __Creates a New Contact__
+* [GET] *api/contacts* : __Retrieves Multiple Contacts__
+* [GET] *api/contacts/{contactId}* : __Retrieves Single Contact__
+* [PUT] *api/contacts/{contactID}* : __Updates a Contact__
+* [DELETE] *api/contacts/{contactID}* : __Deletes a Contact__
+
+### Countries
+* [GET] *api/countries* : __Retrieves All Countries__
+
+### Customer
+* [POST] *api/customers* : __Creates a New Customer__
+* [GET] *api/customers* : __Retrieves Multiple Customers__
+* [GET] *api/customers/{customerId}* : __Retrieves Single Customer__
+* [PUT] *api/customers/{customerId}* : __Updates a Customer__
+* [PUT] *api/customers/{customerId}/status/{statusId}* : __Changes a Customer's Status__
+* [PATCH] *api/customers/{customerId}* : __Partially Updates a Customer__
+* [DELETE] *api/customers/{customerId}* : __Deletes a Contact__
+
+### CustomerStatus
+* [GET] *api/status* : __Retrieves All Available Customer Statuses__
+
+### Notes
+* [POST] *api/notes/{customerId}* : __Creates a New Note for a given Customer__
+* [GET] *api/notes/{customerId}* : __Retrieves All Notes for a Given Customer__
+* [GET] *api/notes/{customerId}/{noteId}* : __Retrieves Single Note for a given Customer__
+* [PUT] *api/contacts/{customerId}/{noteId}* : __Updates a Customer's Note__
+* [DELETE] *api/contacts/{customerId}/{noteId}* : __Deletes a Customer's Note__
+
 
 ## Features
-In this solution you will notice pretty interesting implementations
+In this solution you will notice pretty interesting implementations / features
 
-* Roles  
+* __Roles__  
 There exist 3 different Roles for users in the ecosystem: Admin, Power and Regular User
 
-
-* Authentication using Bearer Token  
+* __Authentication using Bearer Token__  
 A users Table was created with sample seed data for each Role type, the Role and Country of the User is embedded into the Bearer Token to be used in the application  
 
-
-* Localization  
+* __Localization__    
 Three locales supported (en-NZ, es-MX, fr-FR). The User's token contains a locale claim which is used to set the locale of the API (via a Request Culture Provider: TokenBasedRequestCultureProvider), if the token doesn't contain locale, it can be injected as an Accept-Language header  
 
-
-* Role Access Policy  
+* __Role Access Policy__  
 This is implemented using Net Core's intrinsic RBAC approach. Regular User only has ReadOnly access, Power User has limited write access and full read access but deletions are restricted, Admin User has full access including deletion
 
-
-* Attribute Access Policy  
+* __Attribute Access Policy__    
 Also an implementation for attribute based policies was made to demonstrate the use of middleware, a IsNZLUser policy was created and can restrict access to certain endpoints to users whose Country code is set to NZL
 
-
-* Integration Tests
+* __Integration Tests__  
 A set of integration tests was created using Specflow and Gherkin, I chose this technology because I like the Scenario approach since it allows for non developers (Product) to create their test scenarios and test them in an easily readable format.
 
-
-* DB Cardinality
+* __DB Cardinality__  
 The DB contains approaches to use one-to-many and many-to-many relations. The Customer/Contacts association works in a many-to-many relation to demonstrate it's use with EF and how 
 
-* Minimal use of 3rd party packages
+* __Multiple Request/Response approaches__  
+There are several ways to achieve the same result when it comes to sending/receiving data from the server. For example some people prefer to use routes to handle all Id's while others prefer to send the data via the body (either json for complex objects or string for single values) and yet others might choose to use headers or the Bearer Token, for this demo I implemented several approaches to demonstrate. Pagination data for example will be returned as a custom MetaData header to keep the body of the request containin only domain objects, some places use generic POCOs while other might have a more complex Model Binding (Custom Requests), others use values from the route, querystring, body, headers and Bearer Token
+
+* __StatusCodes__  
+I tried to adhere to standard practices when it comes to error codes, as you'll see I implement 201's for successful create operations, 404's for values not found on the DB, 500's for General errors, 204's for successful deletes and so on. 
+
+* __Data Obfuscation__  
+You'll notice Exceptions are logged and response for the errors never carry the details of the exception itself but rather ambiguous and generic error descriptions to avoid giving the caller more detail than needed and enhance security. You'll also notice some of the routes use obfuscated strings as parameters even 'tho the Id's n the DB are numeric or Guids, the obfuscation implementation is very simple here, but the concept to demonstrate is the user of hashed values instead of integers to reduce the vulnerability on the endpoints, similar to how sites like youtube handle url's.
+
+* __Minimal use of 3rd party packages__  
 I try to stick as much as possible to Native libraries and custom code whenever possible. You'll notice the application uses only a few 3rd party packages and they are used on the Integration Tests project (Specflow, FluentAssertions and NUnit) and one on the main app (AutoMapper). I prefer to use 3rd party libraries only when they provide a clear advantage (Security, Performance) over custom implementations, exploits on 3rd party libraries are very risky and I've seen many companies don't have a proper culture of active monitoring and updating of libraries to diminish risk
 
 
