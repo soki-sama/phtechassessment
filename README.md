@@ -10,6 +10,9 @@ __*This service can be deployed at any time*__
 * [API Documentation](#api-documentation)
 * [Features](#features) 
 * [Features I wanted to implement but ran out of time](#features-i-wanted-to-implement-but-ran-out-of-time)
+* [Things I wish I would have done different](#things-i-wish-i-would-have-done-different)
+* [Full Disclosure](#full-disclosure)
+* [Final Words to the Reviewer](#final-words-to-the-reviewer)
 
 ## Quickstart  
 ### Requirements
@@ -91,7 +94,7 @@ The DB contains approaches to use one-to-many and many-to-many relations. The Cu
 I try to stick as much as possible to Native libraries and custom code whenever possible. You'll notice the application uses only a few 3rd party packages and they are used on the Integration Tests project (Specflow, FluentAssertions and NUnit) and one on the main app (AutoMapper). I prefer to use 3rd party libraries only when they provide a clear advantage (Security, Performance) over custom implementations, exploits on 3rd party libraries are very risky and I've seen many companies don't have a proper culture of active monitoring and updating of libraries to diminish risk
 
 
-## Features I wanted to implement but ran out of time:
+## Features I wanted to implement but ran out of time
 - OAuth2
 - Unit Tests
 - DALC Factory: I wanted to implement a SQL Server alternative to the SQLite approach, if you see the project structure you'll notice I use Entity Framework (Code First) and the Schemas are separated from the actual DB Context, this was created so I could generate the migrations for other DB providers and my intent was to implement a factory or strategy pattern to allow switching DB's for development and production environments.
