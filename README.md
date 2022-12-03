@@ -2,6 +2,14 @@
 
 __*This service can be deployed at any time*__
 
+## Table of Contents
+* [Quickstart](#quickstart)  
+* [Repository Contents](#repository-contents)  
+
+## Quickstart  
+### Requirements
+To run this service you need to have .Net Core 6 or Higher installed
+
 ## Repository Contents
 
 * Propeller.API - Contains the main WebAPI application
