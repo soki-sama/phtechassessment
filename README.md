@@ -52,7 +52,7 @@ In the code base you can find a Folder named "Postman", here you will find sampl
 
 You can also open the PropellerHeadTechAssessment.Tests.sln solution file on Visual Studio and build. This will generate a set of tests to be run from the Test Explorer. It is suggested you install the SpecFlow extension to debug and inspect the Gherkin code easier.
 
-Make sure you specify the proper path for BASEAPIURL to your local instance on the [specflow.json](Propeller.Integration.Tests/specflow.json) configuration file, 
+Make sure you specify the proper path for BASEAPIURL to your local instance on the [specflow.json](PropellerHeadTechAssessment/Propeller.Integration.Tests/specflow.json) configuration file, 
 
 ## API Documentation
 
