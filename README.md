@@ -12,8 +12,8 @@ Propeller.Mappers - Model/Entities Mapper configuration for AutoMapper
 Propeller.Models - DTO Models
 Propeller.Shared - Shared Functionality
 
-*PropellerHeadTechAssessment.sln:* Contains the main Application
-*PropellerHeadTechAssessment.Tests.sln:* Contains Integration Tests
+__*PropellerHeadTechAssessment.sln:*__ Contains the main Application
+__*PropellerHeadTechAssessment.Tests.sln:*__ Contains Integration Tests
 
 ## How to Run
 
