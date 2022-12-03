@@ -30,6 +30,11 @@ Alternative:
 3.- Press F5  
 4.- Be amazed :)  
 
+## How to Test  
+In the code base you can find a Folder named "Postman", here you will find sample calls for all endpoints and it's usage. Import this into a new collection on PostMan. Variables can be used to setup the Auth Tokens across the calls, just remember 3 roles exist, so make sure to use the proper authorization
+
+You can also open the PropellerHeadTechAssessment.Tests.sln solution file on Visual Studio and build. This will generate a set of tests to be run from the Test Explorer. It is suggested you install the SpecFlow extension to debug and inspect the Gherkin code easier.
+
 ## API Documentation
 
 A basic documentation for the API endpoints and it's usage can be found at the following address (when run locally):
@@ -61,11 +66,17 @@ This is implemented using Net Core's intrinsic RBAC approach. Regular User only 
 * Attribute Access Policy  
 Also an implementation for attribute based policies was made to demonstrate the use of middleware, a IsNZLUser policy was created and can restrict access to certain endpoints to users whose Country code is set to NZL
 
+
 * Integration Tests
 A set of integration tests was created using Specflow and Gherkin, I chose this technology because I like the Scenario approach since it allows for non developers (Product) to create their test scenarios and test them in an easily readable format.
 
+
+* DB Cardinality
+The DB contains approaches to use one-to-many and many-to-many relations. The Customer/Contacts association works in a many-to-many relation to demonstrate it's use with EF and how 
+
 * Minimal use of 3rd party packages
-I try to stick as much as possible to Native libraries and custom code whenever possible. You'll notice the application uses only a few 3rd party packages and they are used on the Integration Tests project (Specflow, FluentAssertions and NUnit). I prefer to use 3rd party libraries only when they provide a clear advantage (Security, Performance) over custom implementations, exploits on 3rd party libraries are very risky and I've seen many companies don't have a proper culture of active monitoring and updating of libraries to diminish risk
+I try to stick as much as possible to Native libraries and custom code whenever possible. You'll notice the application uses only a few 3rd party packages and they are used on the Integration Tests project (Specflow, FluentAssertions and NUnit) and one on the main app (AutoMapper). I prefer to use 3rd party libraries only when they provide a clear advantage (Security, Performance) over custom implementations, exploits on 3rd party libraries are very risky and I've seen many companies don't have a proper culture of active monitoring and updating of libraries to diminish risk
+
 
 ## Features I wanted to implement but didn't have the time to:
 - OAuth2
@@ -73,7 +84,12 @@ I try to stick as much as possible to Native libraries and custom code whenever 
 - DALC Factory: I wanted to implement a SQL Server alternative to the SQLite approach, if you see the project structure you'll notice I use Entity Framework (Code First) and the Schemas are separated from the actual DB Context, this was created so I could generate the migrations for other DB providers and my intent was to implement a factory or strategy pattern to allow switching DB's for development and production environments.
 - One way user/pwd encryption
 - User lost password / recovery email feature
+- Custom Model Binding for Contact setup to validate on binding for Email and/or Phone existance, currently this is performed at implementation level, I wanted to change this to binding level.
+- Refactoring: Most code adheres to the Single Responsibility principle, so code duplication should be minimal, still I think some code can be moved over to Base classes and shared across derived classes.
 
 ## Things I wish I would have done different
 - AutoMapper, I wanted to give this library a try since I had it recommended by a colleage, I got to say I'm not quite convinced, it seems it's prone to errors and I belive it might have some security issues. Setting it up seemed a bit complicated for complex types and debugging mapping errors is quite hard. For a small application like this one it might not be the best idea
 - You'll also notice a few TODO's left on the code, I addressed as many as I could but I ran out of time to address them all
+
+## Full Disclosure
+I had to refresh my knowledge of Entity Frameworks because for the last 4 years I've only worked on NonSQL environments (Mongo) and we use the MongoDriver approach to query the collections so I wasn't familiar with the current .Net Core EF implementation, the last time I used it was back on .Net FW 4.5
