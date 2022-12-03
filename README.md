@@ -90,6 +90,10 @@ I try to stick as much as possible to Native libraries and custom code whenever 
 ## Things I wish I would have done different
 - AutoMapper, I wanted to give this library a try since I had it recommended by a colleage, I got to say I'm not quite convinced, it seems it's prone to errors and I belive it might have some security issues. Setting it up seemed a bit complicated for complex types and debugging mapping errors is quite hard. For a small application like this one it might not be the best idea
 - You'll also notice a few TODO's left on the code, I addressed as many as I could but I ran out of time to address them all
+- Start this earlier. We had a pretty busy last week at my current job and couldn't dedicate time until last saturday.  
 
-## Full Disclosure
+## Full Disclosure  
 I had to refresh my knowledge of Entity Frameworks because for the last 4 years I've only worked on NonSQL environments (Mongo) and we use the MongoDriver approach to query the collections so I wasn't familiar with the current .Net Core EF implementation, the last time I used it was back on .Net FW 4.5
+
+## Final Words to the Reviewer  
+Please reach out to me if you need any further info regarding the solution, It was really fun to work on this project and I appreciate you dedicating time to review it, if you have any input on what could be performed better please feel free to leave comments on the code or the repo I'd love to get feedback on this. I hope you have as much fun reviewing this as I had coding it, have a good one and Thank you!
