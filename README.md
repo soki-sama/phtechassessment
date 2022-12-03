@@ -2,10 +2,9 @@
 
 __*This service can be deployed at any time*__
 
-##Repository Contents
+## Repository Contents
 
 Propeller.API - Contains the main WebAPI application
-
 Propeller.DALC - Data Access Layer
 
 Propeller.DALC.Sqlite - Data Implementation for SQLite
