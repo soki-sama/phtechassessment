@@ -52,7 +52,7 @@ Alternative:
 4.- Be amazed :)  
 
 ## How to Test  
-In the code base you can find a Folder named "Postman", here you will find sample calls for all endpoints and it's usage. Import the PropellerH.postman_collection file into PostMan. Variables can be used to setup the Auth Tokens across the calls, just remember 3 roles exist, so make sure to use the proper authorization
+In the code base you can find a Folder named "Postman", here you will find sample calls for all endpoints and it's usage. Import the PropellerH.postman_collection file into PostMan. Variables can be used to setup the Auth Tokens across the calls, just remember 3 roles exist, so make sure to use the proper authorization (Admin has access to everything, Power has limited write access -no deletes-, Regular has only read access)
 
 You can also open the PropellerHeadTechAssessment.Tests.sln solution file on Visual Studio and build. This will generate a set of tests to be run from the Test Explorer. It is suggested you install the SpecFlow extension to debug and inspect the Gherkin code easier.
 
